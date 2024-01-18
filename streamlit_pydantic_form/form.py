@@ -1,8 +1,10 @@
+import warnings
 from types import TracebackType
 from typing import Any, Generic, Self, TypeVar
 
 import streamlit as st
 from pydantic import BaseModel
+from typing_extensions import deprecated
 
 from .widget import WidgetBuilder
 
@@ -26,6 +28,17 @@ class st_auto_form(Generic[_T]):  # noqa: N801
 
     def input_widgets(self) -> _T:
         return _model_to_input_components(self.model)
+
+    @deprecated(
+        "st_auto_form.input_components() is deprecated, use st_auto_form.input_widgets() instead",
+    )
+    def input_components(self) -> _T:
+        warnings.warn(
+            "st_auto_form.input_components() is deprecated, use st_auto_form.input_widgets() instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.input_widgets()
 
     def __enter__(self) -> Self:
         # Enter the inner st.form
