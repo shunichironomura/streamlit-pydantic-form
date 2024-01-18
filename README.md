@@ -84,7 +84,31 @@ with st_auto_form("form_2", model=ParentFormModel) as parent_form:
 
 ### Custom Widget
 
-You can define a custom widget by defining a custom `WidgetBuilder`.
+You can define a custom widget by defining a custom `WidgetBuilder` and pass it to `st_auto_form` as `widget_builder`.
+
+```python
+from typing import Annotated
+
+import streamlit as st
+from pydantic import BaseModel
+
+from streamlit_pydantic_form import st_auto_form, widget
+
+# Custom widget builder
+class PointWidget(widget.WidgetBuilder):
+    def build(self) -> PointModel:
+        x = st.slider("X")
+        y = st.slider("Y")
+        return PointModel(x=x, y=y)
+
+with st_auto_form("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
+    val3 = point_form.input_widgets()
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("x", val3.x, "y", val3.y)
+```
+
+You can also use the `Annotated` type hint to define a custom widget.
 
 ```python
 from typing import Annotated
@@ -110,9 +134,9 @@ class PointWidget(widget.WidgetBuilder):
 class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
 
-with st_auto_form("form_3", model=PointFormModel) as point_form:
-    val3 = point_form.input_widgets()
+with st_auto_form("form_4", model=PointFormModel) as point_form2:
+    val4 = point_form2.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
-        st.write("p", val3.p)
+        st.write("x", val4.p.x, "y", val4.p.y)
 ```
