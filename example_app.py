@@ -6,7 +6,6 @@ from pydantic import BaseModel
 from streamlit_pydantic_form import st_auto_form, widget
 
 
-# One widget per field
 class SimpleFormModel(BaseModel):
     slider_val: Annotated[int, widget.Slider("Form slider")] = 0
     checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")] = False
@@ -38,10 +37,10 @@ class PointWidget(widget.WidgetBuilder):
         return PointModel(x=x, y=y)
 
 
-# Nested model
+# Form model
 class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
-    q: SimpleFormModel
+    q: SimpleFormModel  # Nested model is also supported
 
 
 with st_auto_form("form_2", model=PointFormModel) as point_form:
