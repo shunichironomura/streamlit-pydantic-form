@@ -19,14 +19,18 @@ class st_auto_form(Generic[_T]):  # noqa: N801
         model: type[_T],
         clear_on_submit: bool = False,
         border: bool = True,
+        widget_builder: WidgetBuilder | None = None,
     ) -> None:
         self.key = key
         self.model = model
         self.clear_on_submit = clear_on_submit
         self.border = border
         self.form = st.form(key=self.key, clear_on_submit=self.clear_on_submit)
+        self.widget_builder = widget_builder
 
     def input_widgets(self) -> _T:
+        if self.widget_builder is not None:
+            return self.widget_builder.build()
         return _model_to_input_components(self.model)
 
     @deprecated(

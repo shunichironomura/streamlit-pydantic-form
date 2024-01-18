@@ -55,7 +55,7 @@ class PointModel(BaseModel):
     y: int
 
 
-# Custom widget
+# Custom widget builder
 class PointWidget(widget.WidgetBuilder):
     def build(self) -> PointModel:
         x = st.slider("X")
@@ -63,13 +63,22 @@ class PointWidget(widget.WidgetBuilder):
         return PointModel(x=x, y=y)
 
 
-# Form model
+with st_auto_form("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
+    val3 = point_form.input_widgets()
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("x", val3.x, "y", val3.y)
+
+st.markdown("# Custom widget example 2")
+
+
+# Combination of custom and annotated widgets
 class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
 
 
-with st_auto_form("form_3", model=PointFormModel) as point_form:
-    val3 = point_form.input_widgets()
+with st_auto_form("form_4", model=PointFormModel) as point_form2:
+    val4 = point_form2.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
-        st.write("p", val3.p)
+        st.write("x", val4.p.x, "y", val4.p.y)
