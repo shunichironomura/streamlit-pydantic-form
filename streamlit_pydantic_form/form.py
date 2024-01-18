@@ -24,12 +24,7 @@ class st_auto_form(Generic[_T]):
         self.form = st.form(key=self.key, clear_on_submit=self.clear_on_submit)
 
     def input_components(self) -> _T:
-        raw_input_values = {}
-        for name, field in self.model.model_fields.items():
-            raw_input_values[name] = _extract_widget_builder_from_metadata(
-                field.metadata,
-            ).build()
-        return self.model(**raw_input_values)
+        return _model_to_input_components(self.model)
 
     def __enter__(self) -> Self:
         # Enter the inner st.form
@@ -48,5 +43,24 @@ class NoWidgetBuilderFoundError(Exception):
 def _extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder:
     try:
         return next(item for item in metadata if isinstance(item, WidgetBuilder))
-    except StopIteration:
-        raise NoWidgetBuilderFoundError("No widget builder found in metadata")
+    except StopIteration as e:
+        msg = "No widget builder found in metadata"
+        raise NoWidgetBuilderFoundError(msg) from e
+
+
+def _model_to_input_components(model: type[_T]) -> _T:
+    raw_input_values = {}
+    for name, field in model.model_fields.items():
+        try:
+            raw_input_values[name] = _extract_widget_builder_from_metadata(
+                field.metadata,
+            ).build()
+        except NoWidgetBuilderFoundError:
+            if field.annotation is None:
+                raise
+            if issubclass(field.annotation, BaseModel):
+                raw_input_values[name] = _model_to_input_components(field.annotation)
+            else:
+                raise
+
+    return model(**raw_input_values)
