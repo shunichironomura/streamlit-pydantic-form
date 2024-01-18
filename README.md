@@ -2,6 +2,12 @@
 
 Streamlit form component defined by a Pydantic model.
 
+## Installation
+
+```bash
+pip install streamlit-pydantic-form
+```
+
 ## Usage
 
 ### Without `streamlit-pydantic-form`
