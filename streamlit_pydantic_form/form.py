@@ -24,7 +24,7 @@ class st_auto_form(Generic[_T]):  # noqa: N801
         self.border = border
         self.form = st.form(key=self.key, clear_on_submit=self.clear_on_submit)
 
-    def input_components(self) -> _T:
+    def input_widgets(self) -> _T:
         return _model_to_input_components(self.model)
 
     def __enter__(self) -> Self:

@@ -14,7 +14,7 @@ class SimpleFormModel(BaseModel):
 
 
 with st_auto_form("form_1", model=SimpleFormModel) as simple_form:
-    val = simple_form.input_components()
+    val = simple_form.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write("slider", val.slider_val, "checkbox", val.checkbox_val)
@@ -34,7 +34,7 @@ class ParentFormModel(BaseModel):
 
 
 with st_auto_form("form_2", model=ParentFormModel) as parent_form:
-    val2 = parent_form.input_components()
+    val2 = parent_form.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write(
@@ -69,7 +69,7 @@ class PointFormModel(BaseModel):
 
 
 with st_auto_form("form_3", model=PointFormModel) as point_form:
-    val3 = point_form.input_components()
+    val3 = point_form.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write("p", val3.p)
