@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "streamlit-pydantic-form"
+version = "0.0.1"
+description = "Streamlit form component defined by a Pydantic model"
+authors = ["Shunichiro Nomura <nomura@space.t.u-tokyo.ac.jp>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+streamlit = ">=1.11.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "0.1.13"
+mypy = "1.8.0"
+pytest = "7.4.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
