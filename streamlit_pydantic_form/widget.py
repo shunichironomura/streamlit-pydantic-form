@@ -4,15 +4,12 @@ __all__ = [
     "Checkbox",
 ]
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from datetime import time
-
-    from streamlit.elements.widgets.time_widgets import DateWidgetReturn
-    from streamlit.runtime.uploaded_file_manager import UploadedFile
+from datetime import time
+from typing import Any
 
 import streamlit as st
+from streamlit.elements.widgets.time_widgets import DateWidgetReturn
+from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 
 class WidgetBuilder(ABC):
@@ -27,7 +24,7 @@ class WidgetBuilder(ABC):
 
 
 class Checkbox(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -36,7 +33,7 @@ class Checkbox(WidgetBuilder):
 
 
 class Toggle(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -45,7 +42,7 @@ class Toggle(WidgetBuilder):
 
 
 class Radio(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -54,7 +51,7 @@ class Radio(WidgetBuilder):
 
 
 class Selectbox(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -63,7 +60,7 @@ class Selectbox(WidgetBuilder):
 
 
 class Multiselect(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -72,7 +69,7 @@ class Multiselect(WidgetBuilder):
 
 
 class Slider(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -81,7 +78,7 @@ class Slider(WidgetBuilder):
 
 
 class SelectSlider(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -90,7 +87,7 @@ class SelectSlider(WidgetBuilder):
 
 
 class TextInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -99,7 +96,7 @@ class TextInput(WidgetBuilder):
 
 
 class NumberInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -108,7 +105,7 @@ class NumberInput(WidgetBuilder):
 
 
 class TextArea(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -117,7 +114,7 @@ class TextArea(WidgetBuilder):
 
 
 class DateInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -126,7 +123,7 @@ class DateInput(WidgetBuilder):
 
 
 class TimeInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -135,7 +132,7 @@ class TimeInput(WidgetBuilder):
 
 
 class FileUploader(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -144,7 +141,7 @@ class FileUploader(WidgetBuilder):
 
 
 class CameraInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 
@@ -153,7 +150,7 @@ class CameraInput(WidgetBuilder):
 
 
 class ColorPicker(WidgetBuilder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
 

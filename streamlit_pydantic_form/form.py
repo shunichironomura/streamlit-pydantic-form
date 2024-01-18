@@ -1,3 +1,4 @@
+from types import TracebackType
 from typing import Any, Generic, Self, TypeVar
 
 import streamlit as st
@@ -8,7 +9,7 @@ from .widget import WidgetBuilder
 _T = TypeVar("_T", bound=BaseModel)
 
 
-class st_auto_form(Generic[_T]):
+class st_auto_form(Generic[_T]):  # noqa: N801
     def __init__(
         self,
         key: str,
@@ -31,7 +32,12 @@ class st_auto_form(Generic[_T]):
         self.form.__enter__()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
         # Exit the inner st.form
         self.form.__exit__(exc_type, exc_value, traceback)
 
