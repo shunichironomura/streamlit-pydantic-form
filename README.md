@@ -2,9 +2,6 @@
 
 Streamlit form component defined by a Pydantic model.
 
-> [!WARNING]
-> This is a work in progress.
-
 ## Usage
 
 ### Without `streamlit-pydantic-form`
@@ -12,17 +9,13 @@ Streamlit form component defined by a Pydantic model.
 ```python
 import streamlit as st
 
-with st.form("my_form"):
-    st.write("Inside the form")
+with st.form("form_0"):
     slider_val = st.slider("Form slider")
     checkbox_val = st.checkbox("Form checkbox")
 
-    # Every form must have a submit button.
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write("slider", slider_val, "checkbox", checkbox_val)
-
-st.write("Outside the form")
 ```
 
 ### With `streamlit-pydantic-form`
@@ -37,24 +30,83 @@ from pydantic import BaseModel
 
 from streamlit_pydantic_form import st_auto_form, widget
 
+class SimpleFormModel(BaseModel):
+    slider_val: Annotated[int, widget.Slider("Form slider")]
+    checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")]
 
-class MyFormModel(BaseModel):
-    slider_val: Annotated[int, widget.Slider("Form slider")] = 0
-    checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")] = False
 
+with st_auto_form("form_1", model=SimpleFormModel) as simple_form:
+    val = simple_form.input_components()
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("slider", val.slider_val, "checkbox", val.checkbox_val)
+```
 
-with st_auto_form("my_form", model=MyFormModel) as my_form:
-    st.write("Inside the form")
-    input_values = my_form.input_components()
+### Nested Model
+
+You can also define a nested model.
+
+```python
+from typing import Annotated
+
+import streamlit as st
+from pydantic import BaseModel
+
+from streamlit_pydantic_form import st_auto_form, widget
+
+class ChildFormModel(BaseModel):
+    slider_val: Annotated[int, widget.Slider("Child slider")]
+
+class ParentFormModel(BaseModel):
+    slider_val: Annotated[int, widget.Slider("Parent slider")]
+    checkbox_val: Annotated[bool, widget.Checkbox("Parent checkbox")]
+    child: ChildFormModel
+
+with st_auto_form("form_2", model=ParentFormModel) as parent_form:
+    val2 = parent_form.input_components()
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write(
-            "slider",
-            input_values.slider_val,
-            "checkbox",
-            input_values.checkbox_val,
+            "parent slider",
+            val2.slider_val,
+            "parent checkbox",
+            val2.checkbox_val,
+            "child slider",
+            val2.child.slider_val,
         )
+```
 
-st.write("Outside the form")
+### Custom Widget
 
+You can define a custom widget by defining a custom `WidgetBuilder`.
+
+```python
+from typing import Annotated
+
+import streamlit as st
+from pydantic import BaseModel
+
+from streamlit_pydantic_form import st_auto_form, widget
+
+# External model
+class PointModel(BaseModel):
+    x: int
+    y: int
+
+# Custom widget
+class PointWidget(widget.WidgetBuilder):
+    def build(self) -> PointModel:
+        x = st.slider("X")
+        y = st.slider("Y")
+        return PointModel(x=x, y=y)
+
+# Form model
+class PointFormModel(BaseModel):
+    p: Annotated[PointModel, PointWidget()]
+
+with st_auto_form("form_3", model=PointFormModel) as point_form:
+    val3 = point_form.input_components()
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        st.write("p", val3.p)
 ```
