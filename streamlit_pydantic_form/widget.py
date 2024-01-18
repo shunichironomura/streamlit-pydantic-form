@@ -1,7 +1,7 @@
 __all__ = [
     "WidgetBuilder",
-    "slider",
-    "checkbox",
+    "Slider",
+    "Checkbox",
 ]
 from abc import ABC, abstractmethod
 from typing import Any
@@ -15,7 +15,7 @@ class WidgetBuilder(ABC):
         ...
 
 
-class slider(WidgetBuilder):
+class Slider(WidgetBuilder):
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
@@ -24,7 +24,7 @@ class slider(WidgetBuilder):
         return st.slider(*self.args, **self.kwargs)
 
 
-class checkbox(WidgetBuilder):
+class Checkbox(WidgetBuilder):
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs

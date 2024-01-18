@@ -8,8 +8,8 @@ from streamlit_pydantic_form import st_auto_form, widget
 
 # One widget per field
 class SimpleFormModel(BaseModel):
-    slider_val: Annotated[int, widget.slider("Form slider")] = 0
-    checkbox_val: Annotated[bool, widget.checkbox("Form checkbox")] = False
+    slider_val: Annotated[int, widget.Slider("Form slider")] = 0
+    checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")] = False
 
 
 with st_auto_form("form_1", model=SimpleFormModel) as simple_form:
