@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "streamlit-pydantic-form"
-version = "0.0.3"
+version = "0.0.4"
 description = "Streamlit form component defined by a Pydantic model"
 authors = ["Shunichiro Nomura <nomura@space.t.u-tokyo.ac.jp>"]
 readme = "README.md"
