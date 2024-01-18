@@ -39,8 +39,8 @@ from streamlit_pydantic_form import st_auto_form, widget
 
 
 class MyFormModel(BaseModel):
-    slider_val: Annotated[int, widget.slider("Form slider")] = 0
-    checkbox_val: Annotated[bool, widget.checkbox("Form checkbox")] = False
+    slider_val: Annotated[int, widget.Slider("Form slider")] = 0
+    checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")] = False
 
 
 with st_auto_form("my_form", model=MyFormModel) as my_form:
