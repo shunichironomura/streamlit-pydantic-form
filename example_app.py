@@ -14,15 +14,10 @@ class SimpleFormModel(BaseModel):
 
 
 with st_auto_form("form_1", model=SimpleFormModel) as simple_form:
-    input_values = simple_form.input_components()
+    val = simple_form.input_components()
     submitted = st.form_submit_button("Submit")
     if submitted:
-        st.write(
-            "slider",
-            input_values.slider_val,
-            "checkbox",
-            input_values.checkbox_val,
-        )
+        st.write("slider", val.slider_val, "checkbox", val.checkbox_val)
 
 
 st.markdown("# Nested form example")
@@ -39,16 +34,16 @@ class ParentFormModel(BaseModel):
 
 
 with st_auto_form("form_2", model=ParentFormModel) as parent_form:
-    input_values2 = parent_form.input_components()
+    val2 = parent_form.input_components()
     submitted = st.form_submit_button("Submit")
     if submitted:
         st.write(
             "parent slider",
-            input_values2.slider_val,
+            val2.slider_val,
             "parent checkbox",
-            input_values2.checkbox_val,
+            val2.checkbox_val,
             "child slider",
-            input_values2.child.slider_val,
+            val2.child.slider_val,
         )
 
 st.markdown("# Custom widget example")
@@ -74,7 +69,7 @@ class PointFormModel(BaseModel):
 
 
 with st_auto_form("form_3", model=PointFormModel) as point_form:
-    input_values3 = point_form.input_components()
+    val3 = point_form.input_components()
     submitted = st.form_submit_button("Submit")
     if submitted:
-        st.write("p", input_values3.p)
+        st.write("p", val3.p)
