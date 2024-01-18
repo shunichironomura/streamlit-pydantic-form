@@ -4,7 +4,13 @@ __all__ = [
     "Checkbox",
 ]
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from datetime import time
+
+    from streamlit.elements.widgets.time_widgets import DateWidgetReturn
+    from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 import streamlit as st
 
@@ -21,135 +27,135 @@ class WidgetBuilder(ABC):
 
 
 class Checkbox(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> bool:
         return st.checkbox(*self.args, **self.kwargs)
 
 
 class Toggle(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> bool:
         return st.toggle(*self.args, **self.kwargs)
 
 
 class Radio(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> Any | None:
         return st.radio(*self.args, **self.kwargs)
 
 
 class Selectbox(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> Any | None:
         return st.selectbox(*self.args, **self.kwargs)
 
 
 class Multiselect(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> list:
         return st.multiselect(*self.args, **self.kwargs)
 
 
 class Slider(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> Any:
         return st.slider(*self.args, **self.kwargs)
 
 
 class SelectSlider(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> Any | tuple:
         return st.select_slider(*self.args, **self.kwargs)
 
 
 class TextInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> str | None:
         return st.text_input(*self.args, **self.kwargs)
 
 
 class NumberInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> int | float | None:
         return st.number_input(*self.args, **self.kwargs)
 
 
 class TextArea(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> str | None:
         return st.text_area(*self.args, **self.kwargs)
 
 
 class DateInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> DateWidgetReturn:
         return st.date_input(*self.args, **self.kwargs)
 
 
 class TimeInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> time | None:
         return st.time_input(*self.args, **self.kwargs)
 
 
 class FileUploader(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> Any:
         return st.file_uploader(*self.args, **self.kwargs)
 
 
 class CameraInput(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> UploadedFile | None:
         return st.camera_input(*self.args, **self.kwargs)
 
 
 class ColorPicker(WidgetBuilder):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         self.args = args
         self.kwargs = kwargs
 
-    def build(self):
+    def build(self) -> str:
         return st.color_picker(*self.args, **self.kwargs)
