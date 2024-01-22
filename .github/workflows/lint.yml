@@ -1,0 +1,61 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lint.yml"
+      - "streamlit_pydantic_form/**"
+      - "example_app.py"
+      - "pyproject.toml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lint.yml"
+      - "streamlit_pydantic_form/**"
+      - "example_app.py"
+      - "pyproject.toml"
+    types: [opened, synchronize, reopened, ready_for_review]
+
+env:
+  PYTHON_VERSION: "3.11"
+  POETRY_VERSION: "1.7.1"
+
+jobs:
+  ruff:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Extract Ruff version from pyproject.toml
+        id: extract-ruff-version
+        run: |
+          echo "ruff_version=$(python -c "import tomllib;f=open('pyproject.toml', 'rb');print(tomllib.load(f)['tool']['poetry']['group']['dev']['dependencies']['ruff']);f.close()")" >> "$GITHUB_OUTPUT"
+      - uses: chartboost/ruff-action@v1
+        with:
+          version: ${{ steps.extract-ruff-version.outputs.ruff_version }}
+
+  mypy:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Set up Poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Run mypy
+        run: poetry run --no-interaction mypy .
