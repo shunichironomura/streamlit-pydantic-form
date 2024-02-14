@@ -64,7 +64,7 @@ class Multiselect(WidgetBuilder):
         self.args = args
         self.kwargs = kwargs
 
-    def build(self) -> list:
+    def build(self) -> list[Any]:
         return st.multiselect(*self.args, **self.kwargs)
 
 
@@ -82,7 +82,7 @@ class SelectSlider(WidgetBuilder):
         self.args = args
         self.kwargs = kwargs
 
-    def build(self) -> Any | tuple:
+    def build(self) -> Any | tuple[Any]:
         return st.select_slider(*self.args, **self.kwargs)
 
 
@@ -92,7 +92,7 @@ class TextInput(WidgetBuilder):
         self.kwargs = kwargs
 
     def build(self) -> str | None:
-        return st.text_input(*self.args, **self.kwargs)
+        return st.text_input(*self.args, **self.kwargs)  # type: ignore[no-any-return]
 
 
 class NumberInput(WidgetBuilder):
@@ -101,7 +101,7 @@ class NumberInput(WidgetBuilder):
         self.kwargs = kwargs
 
     def build(self) -> int | float | None:
-        return st.number_input(*self.args, **self.kwargs)
+        return st.number_input(*self.args, **self.kwargs)  # type: ignore[no-any-return]
 
 
 class TextArea(WidgetBuilder):
@@ -110,7 +110,7 @@ class TextArea(WidgetBuilder):
         self.kwargs = kwargs
 
     def build(self) -> str | None:
-        return st.text_area(*self.args, **self.kwargs)
+        return st.text_area(*self.args, **self.kwargs)  # type: ignore[no-any-return]
 
 
 class DateInput(WidgetBuilder):
@@ -128,7 +128,7 @@ class TimeInput(WidgetBuilder):
         self.kwargs = kwargs
 
     def build(self) -> time | None:
-        return st.time_input(*self.args, **self.kwargs)
+        return st.time_input(*self.args, **self.kwargs)  # type: ignore[no-any-return]
 
 
 class FileUploader(WidgetBuilder):
