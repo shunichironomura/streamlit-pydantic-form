@@ -13,7 +13,7 @@ class PointModel(BaseModel):
 
 
 # Custom widget builder
-class PointWidget(widget.WidgetBuilder):
+class PointWidget(widget.WidgetBuilder[PointModel]):
     def build(self) -> PointModel:
         x = st.slider("X")
         y = st.slider("Y")
