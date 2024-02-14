@@ -13,8 +13,12 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 
 _T = TypeVar("_T")
 
+_DEFAULT_NOT_SET = object()
+
 
 class WidgetBuilder(ABC, Generic[_T]):
+    default = _DEFAULT_NOT_SET
+
     @abstractmethod
     def build(self) -> _T:
         ...
