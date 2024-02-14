@@ -82,7 +82,8 @@ def _model_to_input_components(model: type[_T]) -> _T:
             if field.annotation is None:
                 raise
             if issubclass(field.annotation, BaseModel):
-                raw_input_values[name] = _model_to_input_components(field.annotation)
+                with st.container(border=True):
+                    raw_input_values[name] = _model_to_input_components(field.annotation)
             else:
                 raise
 
