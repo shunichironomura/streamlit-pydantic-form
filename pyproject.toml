@@ -24,6 +24,7 @@ build-backend = "poetry.core.masonry.api"
 target-version = "py311"
 line-length = 120
 
+[tool.ruff.lint]
 select = ["ALL"]
 ignore = [
     "PLR2004", # magic numbers
@@ -47,4 +48,9 @@ ignore = [
     "FIX002",  # Line contains TODO
     "ERA001",  # commented-out-code
     "PLR0913", # Too many arguments in function definition
+]
+
+[tool.ruff.lint.per-file-ignores]
+"pages/*.py" = [
+    "INP001", # implicit-namespace-package
 ]
