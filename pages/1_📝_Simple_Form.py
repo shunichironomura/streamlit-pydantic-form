@@ -9,7 +9,7 @@ st.markdown("# Simple form example")
 
 
 class SimpleFormModel(BaseModel):
-    slider_val: Annotated[int, widget.Slider("Form slider")]
+    slider_val: Annotated[int, widget.Slider("Form slider")] = 10
     checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")]
 
 
