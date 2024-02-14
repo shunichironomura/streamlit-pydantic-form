@@ -4,6 +4,7 @@ from typing import Any, Generic, Self, TypeVar
 
 import streamlit as st
 from pydantic import BaseModel
+from pydantic_core import PydanticUndefined
 from typing_extensions import deprecated
 
 from .widget import WidgetBuilder
@@ -19,7 +20,7 @@ class st_auto_form(Generic[_T]):  # noqa: N801
         model: type[_T],
         clear_on_submit: bool = False,
         border: bool = True,
-        widget_builder: WidgetBuilder | None = None,
+        widget_builder: WidgetBuilder[_T] | None = None,
     ) -> None:
         self.key = key
         self.model = model
@@ -63,7 +64,7 @@ class NoWidgetBuilderFoundError(Exception):
     pass
 
 
-def _extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder:
+def _extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder[Any]:
     try:
         return next(item for item in metadata if isinstance(item, WidgetBuilder))
     except StopIteration as e:
@@ -75,9 +76,10 @@ def _model_to_input_components(model: type[_T]) -> _T:
     raw_input_values = {}
     for name, field in model.model_fields.items():
         try:
-            raw_input_values[name] = _extract_widget_builder_from_metadata(
-                field.metadata,
-            ).build()
+            builder = _extract_widget_builder_from_metadata(field.metadata)
+            if field.default is not PydanticUndefined:
+                builder.default = field.default
+            raw_input_values[name] = builder.build()
         except NoWidgetBuilderFoundError:
             if field.annotation is None:
                 raise
