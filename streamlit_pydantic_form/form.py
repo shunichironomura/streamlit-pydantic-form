@@ -30,7 +30,7 @@ class st_auto_form(Generic[_T]):  # noqa: N801
 
     def input_widgets(self) -> _T:
         if self.widget_builder is not None:
-            return self.widget_builder.build()
+            return self.widget_builder.build()  # type: ignore[no-any-return]
         return _model_to_input_components(self.model)
 
     @deprecated(
