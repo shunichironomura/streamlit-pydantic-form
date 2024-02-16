@@ -2,6 +2,7 @@ from typing import Annotated
 
 import streamlit as st
 from pydantic import BaseModel
+from streamlit.delta_generator import DeltaGenerator
 
 from streamlit_pydantic_form import st_auto_form, widget
 
@@ -16,9 +17,9 @@ class PointModel(BaseModel):
 
 # Custom widget builder
 class PointWidget(widget.WidgetBuilder[PointModel]):
-    def build(self) -> PointModel:
-        x = st.slider("X")
-        y = st.slider("Y")
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> PointModel:
+        x = form.slider("X")
+        y = form.slider("Y")
         return PointModel(x=x, y=y)
 
 

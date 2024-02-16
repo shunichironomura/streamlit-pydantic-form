@@ -1,0 +1,24 @@
+from typing import Annotated
+
+import streamlit as st
+from pydantic import BaseModel
+
+from streamlit_pydantic_form import st_auto_form, widget
+
+st.markdown("# Custom widget example 2")
+
+
+class PointModel(BaseModel):
+    x: Annotated[int, widget.Slider("X")]
+    y: Annotated[int, widget.Slider("Y")]
+
+
+class PointCloudModel(BaseModel):
+    points: list[PointModel]
+
+
+form = st_auto_form("form_4", model=PointCloudModel)
+val = form.input_widgets()
+submitted = form.form_submit_button("Submit")
+if submitted:
+    st.write("points", val.points)
