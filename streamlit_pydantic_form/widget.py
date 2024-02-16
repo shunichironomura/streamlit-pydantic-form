@@ -6,8 +6,9 @@ __all__ = [
 from abc import ABC, abstractmethod
 from datetime import datetime, time
 from typing import Any, Generic, Literal, TypeVar
+from uuid import uuid4
 
-import streamlit as st
+from streamlit.delta_generator import DeltaGenerator
 from streamlit.elements.widgets.time_widgets import DateValue, DateWidgetReturn
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
@@ -20,7 +21,7 @@ class WidgetBuilder(ABC, Generic[_T]):
     default = _DEFAULT_NOT_SET
 
     @abstractmethod
-    def build(self) -> _T:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> _T:
         ...
 
 
@@ -29,15 +30,21 @@ class WidgetBuilder(ABC, Generic[_T]):
 # Ref: https://docs.streamlit.io/library/api-reference/control-flow/st.form
 
 
+def _generate_random_key() -> str:
+    return str(uuid4())
+
+
 class Checkbox(WidgetBuilder[bool]):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.args = args
         self.kwargs = kwargs
         self.default: bool = False
 
-    def build(self) -> bool:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> bool:
         kwargs = self.kwargs | {"value": self.default}
-        return st.checkbox(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.checkbox(*self.args, **kwargs)
 
 
 class Toggle(WidgetBuilder[bool]):
@@ -46,9 +53,11 @@ class Toggle(WidgetBuilder[bool]):
         self.kwargs = kwargs
         self.default: bool = False
 
-    def build(self) -> bool:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> bool:
         kwargs = self.kwargs | {"value": self.default}
-        return st.toggle(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.toggle(*self.args, **kwargs)
 
 
 class Radio(WidgetBuilder[Any | None]):
@@ -57,9 +66,11 @@ class Radio(WidgetBuilder[Any | None]):
         self.kwargs = kwargs
         self.default: int | None = 0
 
-    def build(self) -> Any | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> Any | None:
         kwargs = self.kwargs | {"index": self.default}
-        return st.radio(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.radio(*self.args, **kwargs)
 
 
 class Selectbox(WidgetBuilder[Any | None]):
@@ -68,9 +79,11 @@ class Selectbox(WidgetBuilder[Any | None]):
         self.kwargs = kwargs
         self.default: int | None = 0
 
-    def build(self) -> Any | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> Any | None:
         kwargs = self.kwargs | {"index": self.default}
-        return st.selectbox(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.selectbox(*self.args, **kwargs)
 
 
 class Multiselect(WidgetBuilder[list[Any]]):
@@ -79,9 +92,11 @@ class Multiselect(WidgetBuilder[list[Any]]):
         self.kwargs = kwargs
         self.default: Any | None = None
 
-    def build(self) -> list[Any]:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> list[Any]:
         kwargs = self.kwargs | {"default": self.default}
-        return st.multiselect(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.multiselect(*self.args, **kwargs)
 
 
 class Slider(WidgetBuilder[Any]):
@@ -90,9 +105,11 @@ class Slider(WidgetBuilder[Any]):
         self.kwargs = kwargs
         self.default: Any | None = None
 
-    def build(self) -> Any:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> Any:
         kwargs = self.kwargs | {"value": self.default}
-        return st.slider(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.slider(*self.args, **kwargs)
 
 
 class SelectSlider(WidgetBuilder[Any | tuple[Any]]):
@@ -101,9 +118,11 @@ class SelectSlider(WidgetBuilder[Any | tuple[Any]]):
         self.kwargs = kwargs
         self.default = None
 
-    def build(self) -> Any | tuple[Any]:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> Any | tuple[Any]:
         kwargs = self.kwargs | {"value": self.default}
-        return st.select_slider(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.select_slider(*self.args, **kwargs)
 
 
 class TextInput(WidgetBuilder[str | None]):
@@ -112,9 +131,11 @@ class TextInput(WidgetBuilder[str | None]):
         self.kwargs = kwargs
         self.default: str = ""
 
-    def build(self) -> str | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> str | None:
         kwargs = self.kwargs | {"value": self.default}
-        return st.text_input(*self.args, **kwargs)  # type: ignore[no-any-return]
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.text_input(*self.args, **kwargs)  # type: ignore[no-any-return]
 
 
 class NumberInput(WidgetBuilder[int | float | None]):
@@ -123,9 +144,11 @@ class NumberInput(WidgetBuilder[int | float | None]):
         self.kwargs = kwargs
         self.default: int | float | Literal["min"] = "min"
 
-    def build(self) -> int | float | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> int | float | None:
         kwargs = self.kwargs | {"value": self.default}
-        return st.number_input(*self.args, **kwargs)  # type: ignore[no-any-return]
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.number_input(*self.args, **kwargs)  # type: ignore[no-any-return]
 
 
 class TextArea(WidgetBuilder[str | None]):
@@ -134,9 +157,11 @@ class TextArea(WidgetBuilder[str | None]):
         self.kwargs = kwargs
         self.default: str = ""
 
-    def build(self) -> str | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> str | None:
         kwargs = self.kwargs | {"value": self.default}
-        return st.text_area(*self.args, **kwargs)  # type: ignore[no-any-return]
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.text_area(*self.args, **kwargs)  # type: ignore[no-any-return]
 
 
 class DateInput(WidgetBuilder[DateWidgetReturn]):
@@ -145,9 +170,11 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         self.kwargs = kwargs
         self.default: DateValue | Literal["today"] = "today"
 
-    def build(self) -> DateWidgetReturn:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> DateWidgetReturn:
         kwargs = self.kwargs | {"value": self.default}
-        return st.date_input(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.date_input(*self.args, **kwargs)
 
 
 class TimeInput(WidgetBuilder[time | None]):
@@ -156,9 +183,11 @@ class TimeInput(WidgetBuilder[time | None]):
         self.kwargs = kwargs
         self.default: time | datetime | Literal["now"] = "now"
 
-    def build(self) -> time | None:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> time | None:
         kwargs = self.kwargs | {"value": self.default}
-        return st.time_input(*self.args, **kwargs)  # type: ignore[no-any-return]
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.time_input(*self.args, **kwargs)  # type: ignore[no-any-return]
 
 
 class FileUploader(WidgetBuilder[Any]):
@@ -166,8 +195,11 @@ class FileUploader(WidgetBuilder[Any]):
         self.args = args
         self.kwargs = kwargs
 
-    def build(self) -> Any:
-        return st.file_uploader(*self.args, **self.kwargs)
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> Any:
+        kwargs = self.kwargs.copy()
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.file_uploader(*self.args, **kwargs)
 
 
 class CameraInput(WidgetBuilder[UploadedFile | None]):
@@ -175,8 +207,11 @@ class CameraInput(WidgetBuilder[UploadedFile | None]):
         self.args = args
         self.kwargs = kwargs
 
-    def build(self) -> UploadedFile | None:
-        return st.camera_input(*self.args, **self.kwargs)
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> UploadedFile | None:
+        kwargs = self.kwargs.copy()
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.camera_input(*self.args, **kwargs)
 
 
 class ColorPicker(WidgetBuilder[str]):
@@ -185,6 +220,8 @@ class ColorPicker(WidgetBuilder[str]):
         self.kwargs = kwargs
         self.default: str | None = None
 
-    def build(self) -> str:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> str:
         kwargs = self.kwargs | {"value": self.default}
-        return st.color_picker(*self.args, **kwargs)
+        if randomize_key:
+            kwargs["key"] = _generate_random_key()
+        return form.color_picker(*self.args, **kwargs)
