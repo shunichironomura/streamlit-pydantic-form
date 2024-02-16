@@ -1,6 +1,7 @@
 import warnings
-from types import TracebackType
-from typing import Any, Generic, Self, TypeVar
+from inspect import isclass
+from types import GenericAlias, TracebackType
+from typing import Any, Generic, Self, TypeVar, get_args, get_origin
 
 import streamlit as st
 from pydantic import BaseModel
@@ -72,6 +73,9 @@ def _extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder[
         raise NoWidgetBuilderFoundError(msg) from e
 
 
+_SUPPORTED_GENERIC_ALIAS = {list}
+
+
 def _model_to_input_components(model: type[_T]) -> _T:
     raw_input_values = {}
     for name, field in model.model_fields.items():
@@ -83,10 +87,24 @@ def _model_to_input_components(model: type[_T]) -> _T:
         except NoWidgetBuilderFoundError:
             if field.annotation is None:
                 raise
-            if issubclass(field.annotation, BaseModel):
+            if (
+                isinstance(field.annotation, GenericAlias)
+                and (origin := get_origin(field.annotation)) in _SUPPORTED_GENERIC_ALIAS
+            ):
+                st.write(f"{get_args(field.annotation)=}")
+                if origin is list:
+                    with st.container(border=True):
+                        raw_input_values[name] = _models_list_to_input_components(get_args(field.annotation)[0])
+            elif isclass(field.annotation) and issubclass(field.annotation, BaseModel):
                 with st.container(border=True):
                     raw_input_values[name] = _model_to_input_components(field.annotation)
             else:
                 raise
 
     return model(**raw_input_values)
+
+
+def _models_list_to_input_components(models: type[_T]) -> list[_T]:
+    n_items = st.number_input("Number of items", min_value=1, value=1)
+    st.write(f"{n_items=}")
+    return [_model_to_input_components(models) for _ in range(n_items)]
