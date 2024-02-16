@@ -20,7 +20,7 @@ class ParentFormModel(BaseModel):
 
 with st_auto_form("form_2", model=ParentFormModel) as parent_form:
     val2 = parent_form.input_widgets()
-    submitted = st.form_submit_button("Submit")
+    submitted = parent_form.form_submit_button("Submit")
     if submitted:
         st.write(
             "parent slider",
