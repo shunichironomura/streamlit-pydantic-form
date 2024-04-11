@@ -17,7 +17,7 @@ class PointModel(BaseModel):
 
 # Custom widget builder
 class PointWidget(widget.WidgetBuilder[PointModel]):
-    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> PointModel:
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> PointModel:  # noqa: ARG002
         x = form.slider("X")
         y = form.slider("Y")
         return PointModel(x=x, y=y)

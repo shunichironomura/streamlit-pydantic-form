@@ -86,7 +86,7 @@ _P = ParamSpec("_P")
 _R = TypeVar("_R")
 
 
-class containerize:
+class containerize:  # noqa: N801
     def __init__(self, *, height: int | None = None, border: bool | None = None) -> None:
         self.height = height
         self.border = border
