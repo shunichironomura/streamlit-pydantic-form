@@ -21,8 +21,7 @@ class WidgetBuilder(ABC, Generic[_T]):
     default = _DEFAULT_NOT_SET
 
     @abstractmethod
-    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> _T:
-        ...
+    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> _T: ...
 
 
 # Widget builders for Streamlit input widgets
