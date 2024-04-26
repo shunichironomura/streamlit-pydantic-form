@@ -13,11 +13,11 @@ class PointModel(BaseModel):
     y: Annotated[int, widget.Slider("Y")]
 
 
-class PointCloudModel(BaseModel):
+class PointListModel(BaseModel):
     points: list[PointModel]
 
 
-form = st_auto_form("form_4", model=PointCloudModel)
+form = st_auto_form("form_4", model=PointListModel)
 val = form.input_widgets()
 submitted = form.form_submit_button("Submit")
 if submitted:
