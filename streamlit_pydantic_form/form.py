@@ -16,7 +16,7 @@ from .widget import WidgetBuilder
 _T = TypeVar("_T", bound=BaseModel)
 
 
-class st_auto_form(Generic[_T]):  # noqa: N801
+class static(Generic[_T]):  # noqa: N801
     def __init__(
         self,
         key: str,
@@ -127,6 +127,8 @@ def _model_to_input_components(
                             get_args(field.annotation)[0],
                             form=form,
                         )
+                else:
+                    raise
             elif isclass(field.annotation) and issubclass(field.annotation, BaseModel):
                 with st.container(border=True):
                     raw_input_values[name] = _model_to_input_components(
@@ -142,7 +144,4 @@ def _model_to_input_components(
 
 def _models_list_to_input_components(model: type[_T], *, form: DeltaGenerator) -> list[_T]:
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=1, value=1))
-    return [
-        containerize(border=True)(_model_to_input_components)(model, form=form, randomize_key=True)
-        for _ in range(n_items)
-    ]
+    return [_model_to_input_components(model, form=form, randomize_key=True) for _ in range(n_items)]
