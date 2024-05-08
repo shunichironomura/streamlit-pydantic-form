@@ -73,13 +73,17 @@ class DynamicForm(Generic[_T]):
         model: type[_T],
         clear_on_submit: bool = False,
         border: bool = True,
+        widget_builder: WidgetBuilder[_T] | None = None,
     ) -> None:
         self.model = model
         self.border = border
+        self.widget_builder = widget_builder
 
     def input_widgets(self) -> _T:
+        if self.widget_builder is not None:
+            return self.widget_builder.build()
         with st.container(border=self.border):
-
+            return _model_to_input_components(self.model)
 
 
 class NoWidgetBuilderFoundError(Exception):
@@ -117,7 +121,7 @@ class containerize:  # noqa: N801
 def _model_to_input_components(
     model: type[_T],
     *,
-    form: DeltaGenerator,
+    form: DeltaGenerator | None = None,
     randomize_key: bool = False,
 ) -> _T:
     raw_input_values = {}
