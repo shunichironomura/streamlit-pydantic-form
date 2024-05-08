@@ -2,7 +2,7 @@ import streamlit as st
 from pydantic import BaseModel
 from streamlit.delta_generator import DeltaGenerator
 
-from streamlit_pydantic_form import static, widget
+from streamlit_pydantic_form import static_form, widget
 
 st.markdown("# Custom widget example")
 
@@ -21,7 +21,7 @@ class PointWidget(widget.WidgetBuilder[PointModel]):
         return PointModel(x=x, y=y)
 
 
-with static("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
+with static_form("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
     val3 = point_form.input_widgets()
     submitted = point_form.form_submit_button("Submit")
     if submitted:

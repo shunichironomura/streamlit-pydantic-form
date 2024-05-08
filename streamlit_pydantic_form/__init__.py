@@ -1,4 +1,4 @@
 __all__ = [
-    "static",
+    "static_form",
 ]
-from .form import static
+from .form import static_form

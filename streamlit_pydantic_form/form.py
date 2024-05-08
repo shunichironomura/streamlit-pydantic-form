@@ -16,7 +16,7 @@ from .widget import WidgetBuilder
 _T = TypeVar("_T", bound=BaseModel)
 
 
-class static(Generic[_T]):  # noqa: N801
+class static_form(Generic[_T]):  # noqa: N801
     def __init__(
         self,
         key: str,

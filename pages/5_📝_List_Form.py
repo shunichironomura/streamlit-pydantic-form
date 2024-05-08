@@ -3,7 +3,7 @@ from typing import Annotated
 import streamlit as st
 from pydantic import BaseModel
 
-from streamlit_pydantic_form import static, widget
+from streamlit_pydantic_form import static_form, widget
 
 st.markdown("# Custom widget example 2")
 
@@ -17,7 +17,7 @@ class PointListModel(BaseModel):
     points: list[PointModel]
 
 
-form = static("form_4", model=PointListModel)
+form = static_form("form_4", model=PointListModel)
 val = form.input_widgets()
 submitted = form.form_submit_button("Submit")
 if submitted:
