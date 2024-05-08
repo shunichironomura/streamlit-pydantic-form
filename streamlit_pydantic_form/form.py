@@ -3,7 +3,7 @@ from collections.abc import Callable
 from functools import wraps
 from inspect import isclass
 from types import GenericAlias, TracebackType
-from typing import Any, Generic, ParamSpec, Self, TypeVar, get_args, get_origin
+from typing import Any, Generic, NoReturn, ParamSpec, Self, TypeVar, get_args, get_origin
 
 import streamlit as st
 from pydantic import BaseModel
@@ -71,19 +71,32 @@ class DynamicForm(Generic[_T]):
         key: str,
         *,
         model: type[_T],
-        clear_on_submit: bool = False,
         border: bool = True,
         widget_builder: WidgetBuilder[_T] | None = None,
     ) -> None:
+        self.key = key
         self.model = model
         self.border = border
         self.widget_builder = widget_builder
 
+    @property
+    def session_state_key(self) -> str:
+        return f"streamlit_pydantic_dynamic_form_{self.key}"
+
     def input_widgets(self) -> _T:
+        if self.session_state_key in st.session_state:
+            return st.session_state[self.session_state_key]  # type: ignore[no-any-return]
         if self.widget_builder is not None:
             return self.widget_builder.build()
+        return self._form_fragment()
+
+    @st.experimental_fragment
+    def _form_fragment(self) -> NoReturn:
         with st.container(border=self.border):
-            return _model_to_input_components(self.model)
+            value = _model_to_input_components(self.model)
+            if st.button("Submit"):
+                st.session_state[self.session_state_key] = value
+                st.rerun()
 
 
 class NoWidgetBuilderFoundError(Exception):
@@ -140,10 +153,12 @@ def _model_to_input_components(
                 and (origin := get_origin(field.annotation)) in _SUPPORTED_GENERIC_ALIAS
             ):
                 if origin is list:
+                    if form is not None:
+                        msg = "List fields are not supported in static forms"
+                        raise ValueError(msg) from None
                     with st.container(border=True):
                         raw_input_values[name] = _models_list_to_input_components(
                             get_args(field.annotation)[0],
-                            form=form,
                         )
                 else:
                     raise
@@ -160,6 +175,6 @@ def _model_to_input_components(
     return model(**raw_input_values)
 
 
-def _models_list_to_input_components(model: type[_T], *, form: DeltaGenerator) -> list[_T]:
+def _models_list_to_input_components(model: type[_T]) -> list[_T]:
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=1, value=1))
-    return [_model_to_input_components(model, form=form, randomize_key=True) for _ in range(n_items)]
+    return [_model_to_input_components(model, randomize_key=True) for _ in range(n_items)]
