@@ -3,7 +3,7 @@ from typing import Annotated
 import streamlit as st
 from pydantic import BaseModel
 
-from streamlit_pydantic_form import static_form, widget
+from streamlit_pydantic_form import StaticForm, widget
 
 st.markdown("# Nested form example")
 
@@ -18,7 +18,7 @@ class ParentFormModel(BaseModel):
     child: ChildFormModel
 
 
-with static_form("form_2", model=ParentFormModel) as parent_form:
+with StaticForm("form_2", model=ParentFormModel) as parent_form:
     val2 = parent_form.input_widgets()
     submitted = parent_form.form_submit_button("Submit")
     if submitted:

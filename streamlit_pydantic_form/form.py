@@ -16,7 +16,7 @@ from .widget import WidgetBuilder
 _T = TypeVar("_T", bound=BaseModel)
 
 
-class static_form(Generic[_T]):  # noqa: N801
+class StaticForm(Generic[_T]):
     def __init__(
         self,
         key: str,
@@ -26,11 +26,8 @@ class static_form(Generic[_T]):  # noqa: N801
         border: bool = True,
         widget_builder: WidgetBuilder[_T] | None = None,
     ) -> None:
-        self.key = key
         self.model = model
-        self.clear_on_submit = clear_on_submit
-        self.border = border
-        self.form = st.form(key=self.key, clear_on_submit=self.clear_on_submit)
+        self.form = st.form(key=key, clear_on_submit=clear_on_submit, border=border)
         self.widget_builder = widget_builder
 
     def input_widgets(self) -> _T:
@@ -66,6 +63,23 @@ class static_form(Generic[_T]):  # noqa: N801
     ) -> None:
         # Exit the inner st.form
         self.form.__exit__(exc_type, exc_value, traceback)
+
+
+class DynamicForm(Generic[_T]):
+    def __init__(
+        self,
+        key: str,
+        *,
+        model: type[_T],
+        clear_on_submit: bool = False,
+        border: bool = True,
+    ) -> None:
+        self.model = model
+        self.border = border
+
+    def input_widgets(self) -> _T:
+        with st.container(border=self.border):
+
 
 
 class NoWidgetBuilderFoundError(Exception):
