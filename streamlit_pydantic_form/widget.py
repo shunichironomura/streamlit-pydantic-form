@@ -27,8 +27,8 @@ class WidgetBuilder(ABC, Generic[_T]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: _T | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> _T: ...
 
 
@@ -52,11 +52,11 @@ class Checkbox(WidgetBuilder[bool]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: bool | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> bool:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -74,11 +74,11 @@ class Toggle(WidgetBuilder[bool]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: bool | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> bool:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -96,11 +96,11 @@ class Radio(WidgetBuilder[Any | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: Any | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> Any | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"index": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -118,11 +118,11 @@ class Selectbox(WidgetBuilder[Any | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: Any | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> Any | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"index": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -140,11 +140,11 @@ class Multiselect(WidgetBuilder[list[Any]]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: list[Any] | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> list[Any]:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"default": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -162,11 +162,11 @@ class Slider(WidgetBuilder[Any]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: Any | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> Any:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -184,11 +184,11 @@ class SelectSlider(WidgetBuilder[Any | tuple[Any]]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: Any | tuple[Any] | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> Any | tuple[Any]:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -206,11 +206,11 @@ class TextInput(WidgetBuilder[str | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: str | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> str | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -228,11 +228,11 @@ class NumberInput(WidgetBuilder[int | float | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: int | float | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> int | float | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -250,11 +250,11 @@ class TextArea(WidgetBuilder[str | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: str | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> str | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -272,11 +272,11 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: DateWidgetReturn | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> DateWidgetReturn:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -294,11 +294,11 @@ class TimeInput(WidgetBuilder[time | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: time | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> time | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -315,10 +315,10 @@ class FileUploader(WidgetBuilder[Any]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,  # noqa: ARG002
-        kwargs: Any = _NOT_SET,
+        value: Any | None = None,  # noqa: ARG002
+        kwargs: dict[str, Any] | None = None,
     ) -> Any:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
         if randomize_key:
             kwargs["key"] = _generate_random_key()
         return st.file_uploader(*self._args, **kwargs) if form is None else form.file_uploader(*self._args, **kwargs)
@@ -334,10 +334,10 @@ class CameraInput(WidgetBuilder[UploadedFile | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,  # noqa: ARG002
-        kwargs: Any = _NOT_SET,
+        value: UploadedFile | None = None,  # noqa: ARG002
+        kwargs: dict[str, Any] | None = None,
     ) -> UploadedFile | None:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
         if randomize_key:
             kwargs["key"] = _generate_random_key()
         return st.camera_input(*self._args, **kwargs) if form is None else form.camera_input(*self._args, **kwargs)
@@ -354,11 +354,11 @@ class ColorPicker(WidgetBuilder[str]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: _T | object = _NOT_SET,
-        kwargs: Any = _NOT_SET,
+        value: str | None = None,
+        kwargs: dict[str, Any] | None = None,
     ) -> str:
-        kwargs = self._kwargs | kwargs if kwargs is not _NOT_SET else self._kwargs
-        value = value if value is not _NOT_SET else self.default
+        kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
+        value = value if value is not None else self.default
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
