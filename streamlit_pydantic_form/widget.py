@@ -228,7 +228,7 @@ class NumberInput(WidgetBuilder[int | float | None]):
         form: DeltaGenerator | None = None,
         *,
         randomize_key: bool = False,
-        value: int | float | None = None,
+        value: float | None = None,
         kwargs: dict[str, Any] | None = None,
     ) -> int | float | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
