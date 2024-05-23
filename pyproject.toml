@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.11"
-streamlit = ">=1.11.0"
+streamlit = ">=1.33.0"
 pydantic = ">=2.5.3"
 typing-extensions = ">=4.9.0"
 
@@ -47,6 +47,7 @@ ignore = [
     "PGH003",  # Use specific rule codes when ignoring type issues
     "RET505",  # Unnecessary `else` after `return` statement
     "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+    "TD002",   # Missing author in TODO
     "TD003",   # add link on issue into TODO
     "FIX002",  # Line contains TODO
     "ERA001",  # commented-out-code

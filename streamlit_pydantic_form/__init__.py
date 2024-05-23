@@ -1,4 +1,5 @@
 __all__ = [
-    "st_auto_form",
+    "StaticForm",
+    "DynamicForm",
 ]
-from .form import st_auto_form
+from .form import DynamicForm, StaticForm

@@ -1,9 +1,10 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 import streamlit as st
 from pydantic import BaseModel
+from streamlit.delta_generator import DeltaGenerator
 
-from streamlit_pydantic_form import st_auto_form, widget
+from streamlit_pydantic_form import StaticForm, widget
 
 st.markdown("# Custom widget example 2")
 
@@ -16,9 +17,17 @@ class PointModel(BaseModel):
 
 # Custom widget builder
 class PointWidget(widget.WidgetBuilder[PointModel]):
-    def build(self) -> PointModel:
-        x = st.slider("X")
-        y = st.slider("Y")
+    def build(
+        self,
+        form: DeltaGenerator | None = None,
+        *,
+        randomize_key: bool = False,  # noqa: ARG002
+        value: PointModel | None = None,  # noqa: ARG002
+        kwargs: dict[str, Any] | None = None,  # noqa: ARG002
+    ) -> PointModel:
+        assert form is not None
+        x = form.slider("X")
+        y = form.slider("Y")
         return PointModel(x=x, y=y)
 
 
@@ -27,7 +36,7 @@ class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
 
 
-with st_auto_form("form_4", model=PointFormModel) as point_form2:
+with StaticForm("form_4", model=PointFormModel) as point_form2:
     val4 = point_form2.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
