@@ -69,6 +69,9 @@ class NotYetSubmittedError(Exception):
     pass
 
 
+_SESSION_STATE_KEY_PREFIX = "streamlit_pydantic_dynamic_form"
+
+
 class DynamicForm(Generic[_T]):
     def __init__(
         self,
@@ -84,40 +87,38 @@ class DynamicForm(Generic[_T]):
         self.widget_builder = widget_builder
 
     @property
-    def _session_state_key(self) -> dict[str, str]:
-        return {k: f"streamlit_pydantic_dynamic_form_{self.key}_{k}" for k in ("value", "submitted")}
+    def _session_state_key_submitted(self) -> str:
+        return f"{_SESSION_STATE_KEY_PREFIX}:{self.key}:submitted"
 
     @property
     def submitted(self) -> bool:
-        return st.session_state.get(self._session_state_key["submitted"], False)
+        return st.session_state.get(self._session_state_key_submitted, False)
 
     @property
     def value(self) -> _T:
-        if not self.submitted or self._session_state_key["value"] not in st.session_state:
+        if not self.submitted:
             raise NotYetSubmittedError
-        return st.session_state[self._session_state_key["value"]]  # type: ignore[no-any-return]
 
-    def input_widgets(self) -> _T:
-        if self.widget_builder is not None:
-            return self.widget_builder.build()
-        val = self._form_fragment()
+        return _restore_object_from_session_state(self.key, self.model)
 
-        # if self.submitted:
-        # val = st.session_state[self._session_state_key["value"]]
-
-        return val
+    def input_widgets(self) -> None:
+        self._form_fragment()
 
     @st.experimental_fragment
     def _form_fragment(self) -> _T:
         with st.container(border=self.border):
-            current_value = st.session_state.get(self._session_state_key["value"], None)
-            print(f"{current_value=}")
-            value = _model_to_input_components(self.model, value=current_value)
+            # current_value = st.session_state.get(self._session_state_key["value"], None)
+            # print(f"{current_value=}")
+            value = _model_to_input_components(
+                self.model,
+                value=None,
+                base_key=self.key,
+            )
             print(f"{value=}")
-            st.session_state[self._session_state_key["value"]] = value
+            # st.session_state[self._session_state_key["value"]] = value
             if st.button("Submit"):
-                st.session_state[self._session_state_key["submitted"]] = True
-                st.session_state[self._session_state_key["value"]] = value
+                st.session_state[self._session_state_key_submitted] = True
+                print("Rerun")
                 st.rerun()
         return value
 
@@ -154,11 +155,34 @@ class containerize:  # noqa: N801
         return wrapper
 
 
+class NotFoundInSessionStateError(Exception):
+    pass
+
+
+def _restore_object_from_session_state(base_key: str, model: type[_T]) -> _T:
+    raw_input_values = {}
+
+    for name, field in model.model_fields.items():
+        # if the field is another model, recursively restore it
+        if isclass(field.annotation) and issubclass(field.annotation, BaseModel):
+            raw_input_values[name] = _restore_object_from_session_state(f"{base_key}.{name}", field.annotation)
+        # if the field is a list of models, recursively restore each item
+        elif isinstance(field.annotation, GenericAlias) and get_origin(field.annotation) is list:
+            raw_input_values[name] = [
+                _restore_object_from_session_state(f"{base_key}.{name}[{idx}]", get_args(field.annotation)[0])
+                for idx in range(st.session_state[f"{base_key}.{name}.n_items"])
+            ]
+        else:
+            raw_input_values[name] = st.session_state[f"{base_key}.{name}"]
+
+    return model(**raw_input_values)
+
+
 def _model_to_input_components(
     model: type[_T],
     *,
+    base_key: str,
     form: DeltaGenerator | None = None,
-    randomize_key: bool = False,
     value: _T | None = None,
 ) -> _T:
     print(f"{value=}")
@@ -171,7 +195,7 @@ def _model_to_input_components(
                 print(f"{name=}; {builder.default=}")
             elif field.default is not PydanticUndefined:
                 builder.default = field.default
-            raw_input_values[name] = builder.build(form, randomize_key=randomize_key)
+            raw_input_values[name] = builder.build(form, randomize_key=False, kwargs={"key": f"{base_key}.{name}"})
             print(f"{name=}; {raw_input_values=}")
 
         except NoWidgetBuilderFoundError:
@@ -188,6 +212,7 @@ def _model_to_input_components(
                     with st.container(border=True):
                         raw_input_values[name] = _models_list_to_input_components(
                             get_args(field.annotation)[0],
+                            key=f"{base_key}.{name}",
                             value=getattr(value, name, None),
                         )
                         print(f"{name=}; {raw_input_values=}")
@@ -197,8 +222,8 @@ def _model_to_input_components(
                 with st.container(border=True):
                     raw_input_values[name] = _model_to_input_components(
                         field.annotation,
+                        base_key=f"{base_key}.{name}",
                         form=form,
-                        randomize_key=randomize_key,
                         value=getattr(value, name, None),
                     )
             else:
@@ -207,9 +232,10 @@ def _model_to_input_components(
     return model(**raw_input_values)
 
 
-def _models_list_to_input_components(model: type[_T], *, value: Sequence[_T] | None = None) -> list[_T]:
+def _models_list_to_input_components(model: type[_T], *, key: str, value: Sequence[_T] | None = None) -> list[_T]:
     print(f"list {value=}")
-    n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=1, value=1))
+    n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=0, value=1))
+    st.session_state[f"{key}.n_items"] = n_items
 
     def get_default_value(value: Sequence[_T] | None, idx: int) -> _T | None:
         if value is None:
@@ -220,6 +246,10 @@ def _models_list_to_input_components(model: type[_T], *, value: Sequence[_T] | N
             return None
 
     return [
-        _model_to_input_components(model, randomize_key=True, value=get_default_value(value, idx))
+        _model_to_input_components(
+            model,
+            base_key=f"{key}[{idx}]",
+            value=get_default_value(value, idx),
+        )
         for idx in range(n_items)
     ]
