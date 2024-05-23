@@ -232,7 +232,7 @@ class NumberInput(WidgetBuilder[int | float | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> int | float | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -276,7 +276,7 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         kwargs: dict[str, Any] | None = None,
     ) -> DateWidgetReturn:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -298,7 +298,7 @@ class TimeInput(WidgetBuilder[time | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> time | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
