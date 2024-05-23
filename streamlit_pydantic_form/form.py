@@ -15,6 +15,8 @@ from .widget import WidgetBuilder
 
 _T = TypeVar("_T", bound=BaseModel)
 
+_SESSION_STATE_KEY_PREFIX = "streamlit_pydantic_form"
+
 
 class StaticForm(Generic[_T]):
     def __init__(
@@ -69,9 +71,6 @@ class NotYetSubmittedError(Exception):
     pass
 
 
-_SESSION_STATE_KEY_PREFIX = "streamlit_pydantic_dynamic_form"
-
-
 class DynamicForm(Generic[_T]):
     def __init__(
         self,
@@ -91,6 +90,10 @@ class DynamicForm(Generic[_T]):
         return f"{_SESSION_STATE_KEY_PREFIX}:{self.key}:submitted"
 
     @property
+    def _session_state_base_key(self) -> str:
+        return f"{_SESSION_STATE_KEY_PREFIX}:{self.key}"
+
+    @property
     def submitted(self) -> bool:
         return st.session_state.get(self._session_state_key_submitted, False)
 
@@ -99,7 +102,7 @@ class DynamicForm(Generic[_T]):
         if not self.submitted:
             raise NotYetSubmittedError
 
-        return _restore_object_from_session_state(self.key, self.model)
+        return _restore_object_from_session_state(self._session_state_base_key, self.model)
 
     def input_widgets(self) -> None:
         self._form_fragment()
@@ -107,18 +110,13 @@ class DynamicForm(Generic[_T]):
     @st.experimental_fragment
     def _form_fragment(self) -> _T:
         with st.container(border=self.border):
-            # current_value = st.session_state.get(self._session_state_key["value"], None)
-            # print(f"{current_value=}")
             value = _model_to_input_components(
                 self.model,
                 value=None,
-                base_key=self.key,
+                base_key=self._session_state_base_key,
             )
-            print(f"{value=}")
-            # st.session_state[self._session_state_key["value"]] = value
             if st.button("Submit"):
                 st.session_state[self._session_state_key_submitted] = True
-                print("Rerun")
                 st.rerun()
         return value
 
@@ -185,18 +183,15 @@ def _model_to_input_components(
     form: DeltaGenerator | None = None,
     value: _T | None = None,
 ) -> _T:
-    print(f"{value=}")
     raw_input_values = {}
     for name, field in model.model_fields.items():
         try:
             builder = _extract_widget_builder_from_metadata(field.metadata)
             if value is not None:
                 builder.default = getattr(value, name)
-                print(f"{name=}; {builder.default=}")
             elif field.default is not PydanticUndefined:
                 builder.default = field.default
             raw_input_values[name] = builder.build(form, randomize_key=False, kwargs={"key": f"{base_key}.{name}"})
-            print(f"{name=}; {raw_input_values=}")
 
         except NoWidgetBuilderFoundError:
             if field.annotation is None:
@@ -215,7 +210,6 @@ def _model_to_input_components(
                             key=f"{base_key}.{name}",
                             value=getattr(value, name, None),
                         )
-                        print(f"{name=}; {raw_input_values=}")
                 else:
                     raise
             elif isclass(field.annotation) and issubclass(field.annotation, BaseModel):
@@ -233,7 +227,6 @@ def _model_to_input_components(
 
 
 def _models_list_to_input_components(model: type[_T], *, key: str, value: Sequence[_T] | None = None) -> list[_T]:
-    print(f"list {value=}")
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=0, value=1))
     st.session_state[f"{key}.n_items"] = n_items
 
