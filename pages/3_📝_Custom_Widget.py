@@ -1,3 +1,5 @@
+from typing import Any
+
 import streamlit as st
 from pydantic import BaseModel
 from streamlit.delta_generator import DeltaGenerator
@@ -15,7 +17,15 @@ class PointModel(BaseModel):
 
 # Custom widget builder
 class PointWidget(widget.WidgetBuilder[PointModel]):
-    def build(self, form: DeltaGenerator, *, randomize_key: bool = False) -> PointModel:  # noqa: ARG002
+    def build(
+        self,
+        form: DeltaGenerator | None = None,
+        *,
+        randomize_key: bool = False,  # noqa: ARG002
+        value: PointModel | None = None,  # noqa: ARG002
+        kwargs: dict[str, Any] | None = None,  # noqa: ARG002
+    ) -> PointModel:
+        assert form is not None
         x = form.slider("X")
         y = form.slider("Y")
         return PointModel(x=x, y=y)
