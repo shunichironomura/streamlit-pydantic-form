@@ -18,7 +18,6 @@ class PointListModel(BaseModel):
 
 
 form = DynamicForm("form_4", model=PointListModel)
-val = form.input_widgets()
-submitted = form.form_submit_button("Submit")
-if submitted:
-    st.write("points", val.points)
+form.input_widgets()
+if form.submitted:
+    st.write("points", form.value.points)
