@@ -1,9 +1,9 @@
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import wraps
 from inspect import isclass
 from types import GenericAlias, TracebackType
-from typing import Any, Generic, NoReturn, ParamSpec, Self, TypeVar, get_args, get_origin
+from typing import Any, Generic, ParamSpec, Self, TypeVar, get_args, get_origin
 
 import streamlit as st
 from pydantic import BaseModel
@@ -65,6 +65,10 @@ class StaticForm(Generic[_T]):
         self.form.__exit__(exc_type, exc_value, traceback)
 
 
+class NotYetSubmittedError(Exception):
+    pass
+
+
 class DynamicForm(Generic[_T]):
     def __init__(
         self,
@@ -80,23 +84,42 @@ class DynamicForm(Generic[_T]):
         self.widget_builder = widget_builder
 
     @property
-    def session_state_key(self) -> str:
-        return f"streamlit_pydantic_dynamic_form_{self.key}"
+    def _session_state_key(self) -> dict[str, str]:
+        return {k: f"streamlit_pydantic_dynamic_form_{self.key}_{k}" for k in ("value", "submitted")}
+
+    @property
+    def submitted(self) -> bool:
+        return st.session_state.get(self._session_state_key["submitted"], False)
+
+    @property
+    def value(self) -> _T:
+        if not self.submitted or self._session_state_key["value"] not in st.session_state:
+            raise NotYetSubmittedError
+        return st.session_state[self._session_state_key["value"]]  # type: ignore[no-any-return]
 
     def input_widgets(self) -> _T:
-        if self.session_state_key in st.session_state:
-            return st.session_state[self.session_state_key]  # type: ignore[no-any-return]
         if self.widget_builder is not None:
             return self.widget_builder.build()
-        return self._form_fragment()
+        val = self._form_fragment()
+
+        # if self.submitted:
+        # val = st.session_state[self._session_state_key["value"]]
+
+        return val
 
     @st.experimental_fragment
-    def _form_fragment(self) -> NoReturn:
+    def _form_fragment(self) -> _T:
         with st.container(border=self.border):
-            value = _model_to_input_components(self.model)
+            current_value = st.session_state.get(self._session_state_key["value"], None)
+            print(f"{current_value=}")
+            value = _model_to_input_components(self.model, value=current_value)
+            print(f"{value=}")
+            st.session_state[self._session_state_key["value"]] = value
             if st.button("Submit"):
-                st.session_state[self.session_state_key] = value
+                st.session_state[self._session_state_key["submitted"]] = True
+                st.session_state[self._session_state_key["value"]] = value
                 st.rerun()
+        return value
 
 
 class NoWidgetBuilderFoundError(Exception):
@@ -136,14 +159,20 @@ def _model_to_input_components(
     *,
     form: DeltaGenerator | None = None,
     randomize_key: bool = False,
+    value: _T | None = None,
 ) -> _T:
+    print(f"{value=}")
     raw_input_values = {}
     for name, field in model.model_fields.items():
         try:
             builder = _extract_widget_builder_from_metadata(field.metadata)
-            if field.default is not PydanticUndefined:
+            if value is not None:
+                builder.default = getattr(value, name)
+                print(f"{builder.default=}")
+            elif field.default is not PydanticUndefined:
                 builder.default = field.default
             raw_input_values[name] = builder.build(form, randomize_key=randomize_key)
+            print(f"165{raw_input_values=}")
 
         except NoWidgetBuilderFoundError:
             if field.annotation is None:
@@ -159,7 +188,9 @@ def _model_to_input_components(
                     with st.container(border=True):
                         raw_input_values[name] = _models_list_to_input_components(
                             get_args(field.annotation)[0],
+                            value=getattr(value, name, None),
                         )
+                        print(f"{raw_input_values=}")
                 else:
                     raise
             elif isclass(field.annotation) and issubclass(field.annotation, BaseModel):
@@ -168,6 +199,7 @@ def _model_to_input_components(
                         field.annotation,
                         form=form,
                         randomize_key=randomize_key,
+                        value=getattr(value, name, None),
                     )
             else:
                 raise
@@ -175,6 +207,19 @@ def _model_to_input_components(
     return model(**raw_input_values)
 
 
-def _models_list_to_input_components(model: type[_T]) -> list[_T]:
+def _models_list_to_input_components(model: type[_T], *, value: Sequence[_T] | None = None) -> list[_T]:
+    print(f"{value=}")
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=1, value=1))
-    return [_model_to_input_components(model, randomize_key=True) for _ in range(n_items)]
+
+    def get_default_value(value: Sequence[_T] | None, idx: int) -> _T | None:
+        if value is None:
+            return None
+        try:
+            return value[idx]
+        except IndexError:
+            return None
+
+    return [
+        _model_to_input_components(model, randomize_key=True, value=get_default_value(value, idx))
+        for idx in range(n_items)
+    ]
