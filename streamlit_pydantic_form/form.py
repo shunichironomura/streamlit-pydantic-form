@@ -168,11 +168,11 @@ def _model_to_input_components(
             builder = _extract_widget_builder_from_metadata(field.metadata)
             if value is not None:
                 builder.default = getattr(value, name)
-                print(f"{builder.default=}")
+                print(f"{name=}; {builder.default=}")
             elif field.default is not PydanticUndefined:
                 builder.default = field.default
             raw_input_values[name] = builder.build(form, randomize_key=randomize_key)
-            print(f"165{raw_input_values=}")
+            print(f"{name=}; {raw_input_values=}")
 
         except NoWidgetBuilderFoundError:
             if field.annotation is None:
@@ -190,7 +190,7 @@ def _model_to_input_components(
                             get_args(field.annotation)[0],
                             value=getattr(value, name, None),
                         )
-                        print(f"{raw_input_values=}")
+                        print(f"{name=}; {raw_input_values=}")
                 else:
                     raise
             elif isclass(field.annotation) and issubclass(field.annotation, BaseModel):
@@ -208,7 +208,7 @@ def _model_to_input_components(
 
 
 def _models_list_to_input_components(model: type[_T], *, value: Sequence[_T] | None = None) -> list[_T]:
-    print(f"{value=}")
+    print(f"list {value=}")
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=1, value=1))
 
     def get_default_value(value: Sequence[_T] | None, idx: int) -> _T | None:
