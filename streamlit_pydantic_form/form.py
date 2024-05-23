@@ -29,13 +29,18 @@ class StaticForm(Generic[_T]):
         widget_builder: WidgetBuilder[_T] | None = None,
     ) -> None:
         self.model = model
-        self.form = st.form(key=key, clear_on_submit=clear_on_submit, border=border)
+        self.key = key
+        self.form = st.form(key=self.key, clear_on_submit=clear_on_submit, border=border)
         self.widget_builder = widget_builder
+
+    @property
+    def _session_state_base_key(self) -> str:
+        return f"{_SESSION_STATE_KEY_PREFIX}:{self.key}"
 
     def input_widgets(self) -> _T:
         if self.widget_builder is not None:
             return self.widget_builder.build(self.form)
-        return _model_to_input_components(self.model, form=self.form)
+        return _model_to_input_components(self.model, form=self.form, base_key=self._session_state_base_key)
 
     @deprecated(
         "st_auto_form.input_components() is deprecated, use st_auto_form.input_widgets() instead",
