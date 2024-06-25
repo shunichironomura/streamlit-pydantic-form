@@ -13,7 +13,7 @@ typing-extensions = ">=4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "0.4.10"
-mypy = "1.10.0"
+mypy = "1.10.1"
 pytest = "8.2.2"
 
 [build-system]
