@@ -1,6 +1,43 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:base"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchCategories": [
+        "ci"
+      ],
+      "addLabels": [
+        "ci"
+      ]
+    },
+    {
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchDepTypes": [
+        "docs"
+      ],
+      "addLabels": [
+        "documentation"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchDepTypes": [
+        "dev"
+      ],
+      "addLabels": [
+        "ci"
+      ],
+      "automerge": true
+    }
   ]
 }
