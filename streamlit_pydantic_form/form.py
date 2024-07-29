@@ -112,7 +112,7 @@ class DynamicForm(Generic[_T]):
     def input_widgets(self) -> None:
         self._form_fragment()
 
-    @st.experimental_fragment
+    @st.fragment
     def _form_fragment(self) -> _T:
         with st.container(border=self.border):
             value = _model_to_input_components(
