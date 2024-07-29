@@ -31,7 +31,7 @@ class PointWidget(widget.WidgetBuilder[PointModel]):
         return PointModel(x=x, y=y)
 
 
-with StaticForm("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
+with StaticForm("custom_widget_form", model=PointModel, widget_builder=PointWidget()) as point_form:
     val3 = point_form.input_widgets()
     submitted = point_form.form_submit_button("Submit")
     if submitted:

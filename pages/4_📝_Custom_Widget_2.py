@@ -36,7 +36,7 @@ class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
 
 
-with StaticForm("form_4", model=PointFormModel) as point_form2:
+with StaticForm("custom_widget_form_2", model=PointFormModel) as point_form2:
     val4 = point_form2.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:

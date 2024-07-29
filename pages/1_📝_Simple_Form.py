@@ -13,7 +13,7 @@ class SimpleFormModel(BaseModel):
     checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")]
 
 
-with StaticForm("form_1", model=SimpleFormModel) as simple_form:
+with StaticForm("simple_static_form", model=SimpleFormModel) as simple_form:
     val = simple_form.input_widgets()
     submitted = st.form_submit_button("Submit")
     if submitted:
