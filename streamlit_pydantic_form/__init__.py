@@ -2,4 +2,4 @@ __all__ = [
     "StaticForm",
     "DynamicForm",
 ]
-from .form import DynamicForm, StaticForm
+from ._form import DynamicForm, StaticForm
