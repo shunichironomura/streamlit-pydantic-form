@@ -13,7 +13,7 @@ class SimpleFormModel(BaseModel):
     checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")]
 
 
-form = DynamicForm("form_1", model=SimpleFormModel)
+form = DynamicForm("dynamic_form", model=SimpleFormModel)
 
 form.input_widgets()
 if form.submitted:

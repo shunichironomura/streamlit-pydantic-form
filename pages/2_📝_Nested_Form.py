@@ -18,7 +18,7 @@ class ParentFormModel(BaseModel):
     child: ChildFormModel
 
 
-with StaticForm("form_2", model=ParentFormModel) as parent_form:
+with StaticForm("nested_static_form", model=ParentFormModel) as parent_form:
     val2 = parent_form.input_widgets()
     submitted = parent_form.form_submit_button("Submit")
     if submitted:
