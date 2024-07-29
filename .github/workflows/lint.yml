@@ -7,7 +7,7 @@ on:
     paths:
       - ".github/workflows/lint.yml"
       - "streamlit_pydantic_form/**"
-      - "example_app.py"
+      - "Example_App.py"
       - "pyproject.toml"
   pull_request:
     branches:
@@ -15,7 +15,7 @@ on:
     paths:
       - ".github/workflows/lint.yml"
       - "streamlit_pydantic_form/**"
-      - "example_app.py"
+      - "Example_App.py"
       - "pyproject.toml"
     types: [opened, synchronize, reopened, ready_for_review]
 
