@@ -11,6 +11,7 @@ from pydantic_core import PydanticUndefined
 from streamlit.delta_generator import DeltaGenerator
 from typing_extensions import deprecated
 
+from ._exceptions import NotYetSubmittedError, NoWidgetBuilderFoundError
 from .widget import WidgetBuilder
 
 _T = TypeVar("_T", bound=BaseModel)
@@ -72,10 +73,6 @@ class StaticForm(Generic[_T]):
         self.form.__exit__(exc_type, exc_value, traceback)
 
 
-class NotYetSubmittedError(Exception):
-    pass
-
-
 class DynamicForm(Generic[_T]):
     def __init__(
         self,
@@ -126,16 +123,11 @@ class DynamicForm(Generic[_T]):
         return value
 
 
-class NoWidgetBuilderFoundError(Exception):
-    pass
-
-
 def _extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder[Any]:
     try:
         return next(item for item in metadata if isinstance(item, WidgetBuilder))
     except StopIteration as e:
-        msg = "No widget builder found in metadata"
-        raise NoWidgetBuilderFoundError(msg) from e
+        raise NoWidgetBuilderFoundError from e
 
 
 _SUPPORTED_GENERIC_ALIAS = {list}
@@ -156,10 +148,6 @@ class containerize:  # noqa: N801
                 return func(*args, **kwargs)
 
         return wrapper
-
-
-class NotFoundInSessionStateError(Exception):
-    pass
 
 
 def _restore_object_from_session_state(base_key: str, model: type[_T]) -> _T:
