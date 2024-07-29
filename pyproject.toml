@@ -2,8 +2,16 @@
 name = "streamlit-pydantic-form"
 version = "0.0.4"
 description = "Streamlit form component defined by a Pydantic model"
+license = "MIT"
 authors = ["Shunichiro Nomura <nomura@space.t.u-tokyo.ac.jp>"]
 readme = "README.md"
+repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
+keywords = ["streamlit", "pydantic", "form"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+]
+packages = [{ include = "streamlit_pydantic_form" }]
 
 [tool.poetry.dependencies]
 python = ">=3.11"
