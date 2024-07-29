@@ -5,23 +5,23 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/lint.yml"
+      - ".github/workflows/lint.yaml"
       - "streamlit_pydantic_form/**"
-      - "example_app.py"
+      - "Example_App.py"
       - "pyproject.toml"
   pull_request:
     branches:
       - main
     paths:
-      - ".github/workflows/lint.yml"
+      - ".github/workflows/lint.yaml"
       - "streamlit_pydantic_form/**"
-      - "example_app.py"
+      - "Example_App.py"
       - "pyproject.toml"
     types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   PYTHON_VERSION: "3.11"
-  POETRY_VERSION: "1.7.1"
+  POETRY_VERSION: "1.8.3"
 
 jobs:
   ruff:
