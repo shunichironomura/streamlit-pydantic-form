@@ -2,9 +2,9 @@ __all__ = [
     "StaticForm",
     "DynamicForm",
 ]
-
 import warnings
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Generator, Sequence
+from contextlib import contextmanager
 from inspect import isclass
 from types import GenericAlias, TracebackType
 from typing import Any, Generic, Self, TypeVar, get_args, get_origin
@@ -116,6 +116,33 @@ class DynamicForm(Generic[T]):
 
         return restore_object_from_session_state(self._session_state_base_key, self.model)
 
+    @contextmanager
+    def on_submit(self) -> Generator[None, None, None]:
+        """Context manager to run code when the form is submitted.
+
+        It resets the submitted state to `False` after the context manager exits.
+        This context manager should be used when `submitted` is `True`.
+        If `submitted` is `False`, it raises a `NotYetSubmittedError`.
+
+        Example:
+        -------
+        ```python
+        form = DynamicForm("form", model=MyModel)
+        form.input_widgets()
+        if form.submitted:
+            with form.on_submit():
+                st.write(form.value)
+        ```
+
+        """
+        if self.submitted:
+            try:
+                yield
+            finally:
+                st.session_state[self._session_state_key_submitted] = False
+        else:
+            raise NotYetSubmittedError
+
     def input_widgets(self) -> None:
         """Render the form's input widgets."""
         self._form_fragment()
@@ -152,7 +179,7 @@ def restore_object_from_session_state(base_key: str, model: type[T]) -> T:
         elif isinstance(field.annotation, GenericAlias) and get_origin(field.annotation) is list:
             raw_input_values[name] = [
                 restore_object_from_session_state(f"{base_key}.{name}[{idx}]", get_args(field.annotation)[0])
-                for idx in range(st.session_state[f"{base_key}.{name}.n_items"])
+                for idx in range(st.session_state[f"{base_key}.{name}:__n_items"])
             ]
         else:
             raw_input_values[name] = st.session_state[f"{base_key}.{name}"]
@@ -215,7 +242,7 @@ def model_to_input_components(
 
 def models_list_to_input_components(model: type[T], *, key: str, value: Sequence[T] | None = None) -> list[T]:
     n_items = int(st.number_input(f"Number of `{model.__name__}` items", min_value=0, value=1))
-    st.session_state[f"{key}.n_items"] = n_items
+    st.session_state[f"{key}:__n_items"] = n_items
 
     def get_default_value(value: Sequence[T] | None, idx: int) -> T | None:
         if value is None:
