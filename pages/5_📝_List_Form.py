@@ -17,7 +17,18 @@ class PointListModel(BaseModel):
     points: list[PointModel]
 
 
+if "points" not in st.session_state:
+    st.session_state.points = []
+
+
 form = DynamicForm("list_form", model=PointListModel)
-form.input_widgets()
+
+if st.button("Add points") and not st.button("Cancel"):
+    form.input_widgets()
+
 if form.submitted:
-    st.write("points", form.value.points)
+    with form.on_submit():
+        st.write("Added points", form.value.points)
+        st.session_state.points.extend(form.value.points)
+
+st.write("All points", st.session_state.points)
