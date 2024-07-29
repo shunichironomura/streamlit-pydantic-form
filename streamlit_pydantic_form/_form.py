@@ -5,10 +5,9 @@ __all__ = [
 
 import warnings
 from collections.abc import Callable, Sequence
-from functools import wraps
 from inspect import isclass
 from types import GenericAlias, TracebackType
-from typing import Any, Generic, ParamSpec, Self, TypeVar, get_args, get_origin
+from typing import Any, Generic, Self, TypeVar, get_args, get_origin
 
 import streamlit as st
 from pydantic import BaseModel
@@ -142,26 +141,6 @@ def extract_widget_builder_from_metadata(metadata: list[Any]) -> WidgetBuilder[A
         raise NoWidgetBuilderFoundError from e
 
 
-SUPPORTED_GENERIC_ALIAS = {list}
-
-P = ParamSpec("P")
-R = TypeVar("R")
-
-
-class containerize:  # noqa: N801
-    def __init__(self, *, height: int | None = None, border: bool | None = None) -> None:
-        self.height = height
-        self.border = border
-
-    def __call__(self, func: Callable[P, R]) -> Callable[P, R]:
-        @wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
-            with st.container(height=self.height, border=self.border):
-                return func(*args, **kwargs)
-
-        return wrapper
-
-
 def restore_object_from_session_state(base_key: str, model: type[T]) -> T:
     raw_input_values = {}
 
@@ -179,6 +158,9 @@ def restore_object_from_session_state(base_key: str, model: type[T]) -> T:
             raw_input_values[name] = st.session_state[f"{base_key}.{name}"]
 
     return model(**raw_input_values)
+
+
+SUPPORTED_GENERIC_ALIAS = {list}
 
 
 def model_to_input_components(
