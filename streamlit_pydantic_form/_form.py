@@ -79,6 +79,8 @@ class StaticForm(Generic[T]):
 
 
 class DynamicForm(Generic[T]):
+    """A dynamic form that can be used to render input widgets for a Pydantic model."""
+
     def __init__(
         self,
         key: str,
@@ -94,24 +96,29 @@ class DynamicForm(Generic[T]):
 
     @property
     def _session_state_key_submitted(self) -> str:
+        """Key to store the submitted state of the form."""
         return f"{SESSION_STATE_KEY_PREFIX}:{self.key}:submitted"
 
     @property
     def _session_state_base_key(self) -> str:
+        """Base key to store the form's input values."""
         return f"{SESSION_STATE_KEY_PREFIX}:{self.key}"
 
     @property
     def submitted(self) -> bool:
+        """Whether the form has been submitted."""
         return st.session_state.get(self._session_state_key_submitted, False)
 
     @property
     def value(self) -> T:
+        """The form's input values."""
         if not self.submitted:
             raise NotYetSubmittedError
 
         return restore_object_from_session_state(self._session_state_base_key, self.model)
 
     def input_widgets(self) -> None:
+        """Render the form's input widgets."""
         self._form_fragment()
 
     @st.fragment
