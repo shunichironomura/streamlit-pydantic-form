@@ -20,7 +20,7 @@ pydantic = ">=2.5.3"
 typing-extensions = ">=4.9.0"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.6.3"
+ruff = "0.6.4"
 mypy = "1.11.2"
 pytest = "8.3.2"
 
