@@ -1,33 +1,38 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "streamlit-pydantic-form"
 version = "0.0.6"
 description = "Streamlit form component defined by a Pydantic model"
-license = "MIT"
-authors = ["Shunichiro Nomura <nomura@space.t.u-tokyo.ac.jp>"]
 readme = "README.md"
-repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
+authors = [
+    { name = "Shunichiro Nomura", email = "nomura@space.t.u-tokyo.ac.jp" },
+]
+requires-python = ">=3.11"
+license = "MIT"
 keywords = ["streamlit", "pydantic", "form"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
 ]
-packages = [{ include = "streamlit_pydantic_form" }]
+dependencies = [
+    "streamlit>=1.37.0",
+    "pydantic>=2.5.3",
+    "typing-extensions>=4.9.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.11"
-streamlit = ">=1.37.0"
-pydantic = ">=2.5.3"
-typing-extensions = ">=4.9.0"
+[project.urls]
+Repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
 
-[tool.poetry.group.dev.dependencies]
-ruff = "0.7.0"
-mypy = "1.12.1"
-pytest = "8.3.3"
-pre-commit = "4.0.1"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+dev-dependencies = [
+    "ruff==0.7.0",
+    "mypy==1.12.1",
+    "pytest==8.3.3",
+    "pre-commit==4.0.1",
+]
 
 [tool.mypy]
 strict = true
