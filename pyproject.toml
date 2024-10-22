@@ -20,9 +20,10 @@ pydantic = ">=2.5.3"
 typing-extensions = ">=4.9.0"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.6.9"
-mypy = "1.11.2"
+ruff = "0.7.0"
+mypy = "1.12.1"
 pytest = "8.3.3"
+pre-commit = "4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
