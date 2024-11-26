@@ -1,7 +1,7 @@
 __all__ = [
-    "WidgetBuilder",
-    "Slider",
     "Checkbox",
+    "Slider",
+    "WidgetBuilder",
 ]
 from abc import ABC, abstractmethod
 from datetime import datetime, time

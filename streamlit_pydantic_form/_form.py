@@ -1,6 +1,6 @@
 __all__ = [
-    "StaticForm",
     "DynamicForm",
+    "StaticForm",
 ]
 import warnings
 from collections.abc import Callable, Generator, Sequence
