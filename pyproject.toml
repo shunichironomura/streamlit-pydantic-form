@@ -28,7 +28,7 @@ Repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
 
 [tool.uv]
 dev-dependencies = [
-    "ruff==0.7.4",
+    "ruff==0.8.0",
     "mypy==1.13.0",
     "pytest==8.3.3",
     "pre-commit==4.0.1",
@@ -47,8 +47,6 @@ ignore = [
     "PLR2004", # magic numbers
     "S101",    # use of assert
     "G",       # logging format
-    "ANN101",  # missing type annotation for self in method
-    "ANN102",  # missing type annotation for cls in classmethod
     "D100",    # missing docstring in public module
     "D101",    # missing docstring in public class
     "D102",    # missing docstring in public method
