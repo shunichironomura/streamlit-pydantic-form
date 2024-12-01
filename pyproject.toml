@@ -30,7 +30,7 @@ Repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
 dev-dependencies = [
     "ruff==0.8.1",
     "mypy==1.13.0",
-    "pytest==8.3.3",
+    "pytest==8.3.4",
     "pre-commit==4.0.1",
 ]
 
