@@ -2,25 +2,17 @@ name: Lint
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/lint.yaml"
-      - "streamlit_pydantic_form/**"
-      - "Example_App.py"
-      - "pyproject.toml"
+    branches: [main]
   pull_request:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/lint.yaml"
-      - "streamlit_pydantic_form/**"
-      - "Example_App.py"
-      - "pyproject.toml"
-    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
-  UV_VERSION: "0.4.x"
+  UV_VERSION: "0.5.x"
+  UV_FROZEN: "1"
+  UV_NO_SYNC: "1"
 
 jobs:
   ruff:
@@ -28,16 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+
       - uses: actions/setup-python@v5
         with:
           python-version-file: ".python-version"
-      - name: Extract Ruff version from pyproject.toml
-        id: extract-ruff-version
-        run: |
-          echo "ruff_version=$(python -c "import tomllib;f=open('pyproject.toml', 'rb');print(next(iter(version.strip() for package, version in (dep.split('==') for dep in tomllib.load(f)['tool']['uv']['dev-dependencies'] if '==' in dep) if package.strip() == 'ruff')));f.close()")" >> "$GITHUB_OUTPUT"
-      - uses: chartboost/ruff-action@v1
-        with:
-          version: ${{ steps.extract-ruff-version.outputs.ruff_version }}
+
+      - name: Install ruff
+        run: uv sync --only-group ruff
+
+      - name: Run ruff
+        run: uv run -- ruff check
 
   mypy:
     if: github.event.pull_request.draft == false
@@ -55,7 +52,7 @@ jobs:
           python-version-file: ".python-version"
 
       - name: Install the project
-        run: uv sync
+        run: uv sync --no-dev --group typing
 
       - name: Run mypy
         run: uv run -- mypy .
