@@ -26,13 +26,16 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
 
-[tool.uv]
-dev-dependencies = [
-    "ruff==0.8.4",
-    "mypy==1.14.0",
-    "pytest==8.3.4",
+[dependency-groups]
+dev = [
     "pre-commit==4.0.1",
+    { include-group = "ruff" },
+    { include-group = "typing" },
+    { include-group = "testing" },
 ]
+ruff = ["ruff==0.8.4"]
+typing = ["mypy==1.14.0"]
+testing = ["pytest==8.3.4"]
 
 [tool.mypy]
 strict = true
