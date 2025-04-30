@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  UV_VERSION: "0.5.x"
+  UV_VERSION: "0.7.x"
   UV_FROZEN: "1"
   UV_NO_SYNC: "1"
 
