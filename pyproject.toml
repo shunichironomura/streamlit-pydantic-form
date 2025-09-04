@@ -35,7 +35,7 @@ dev = [
 ]
 ruff = ["ruff==0.12.11"]
 typing = ["mypy==1.17.1"]
-testing = ["pytest==8.4.1"]
+testing = ["pytest==8.4.2"]
 
 [tool.mypy]
 strict = true
