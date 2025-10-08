@@ -34,7 +34,7 @@ dev = [
     { include-group = "testing" },
 ]
 ruff = ["ruff==0.14.0"]
-typing = ["mypy==1.17.1"]
+typing = ["mypy==1.18.2"]
 testing = ["pytest==8.4.2"]
 
 [tool.mypy]
