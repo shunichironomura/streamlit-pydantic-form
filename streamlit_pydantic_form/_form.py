@@ -106,7 +106,7 @@ class DynamicForm(Generic[T]):
     @property
     def submitted(self) -> bool:
         """Whether the form has been submitted."""
-        return st.session_state.get(self._session_state_key_submitted, False)
+        return st.session_state.get(self._session_state_key_submitted, False)  # type: ignore[no-any-return]
 
     @property
     def value(self) -> T:
