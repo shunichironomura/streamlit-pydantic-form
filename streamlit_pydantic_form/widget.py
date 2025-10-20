@@ -280,7 +280,7 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)
+        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class TimeInput(WidgetBuilder[time | None]):
