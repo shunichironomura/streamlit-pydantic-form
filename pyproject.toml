@@ -30,7 +30,7 @@ dev = [
   { include-group = "typing" },
 ]
 ruff = ["ruff==0.14.8"]
-testing = ["pytest==9.0.1"]
+testing = ["pytest==9.0.2"]
 typing = ["mypy==1.19.0"]
 
 [build-system]
