@@ -29,7 +29,7 @@ dev = [
   { include-group = "testing" },
   { include-group = "typing" },
 ]
-ruff = ["ruff==0.14.8"]
+ruff = ["ruff==0.14.9"]
 testing = ["pytest==9.0.2"]
 typing = ["mypy==1.19.0"]
 
