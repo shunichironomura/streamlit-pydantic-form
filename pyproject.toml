@@ -31,7 +31,7 @@ dev = [
 ]
 ruff = ["ruff==0.14.9"]
 testing = ["pytest==9.0.2"]
-typing = ["mypy==1.19.0"]
+typing = ["mypy==1.19.1"]
 
 [build-system]
 requires = ["hatchling"]
