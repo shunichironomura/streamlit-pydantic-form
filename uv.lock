@@ -1292,14 +1292,14 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "mypy", specifier = "==1.19.1" },
-    { name = "pre-commit", specifier = "==4.5.1" },
-    { name = "pytest", specifier = "==9.0.2" },
-    { name = "ruff", specifier = "==0.14.9" },
+    { name = "mypy", specifier = ">=1.19.1" },
+    { name = "pre-commit", specifier = ">=4.5.1" },
+    { name = "pytest", specifier = ">=9.0.2" },
+    { name = "ruff", specifier = ">=0.14.9" },
 ]
-ruff = [{ name = "ruff", specifier = "==0.14.9" }]
-testing = [{ name = "pytest", specifier = "==9.0.2" }]
-typing = [{ name = "mypy", specifier = "==1.19.1" }]
+ruff = [{ name = "ruff", specifier = ">=0.14.9" }]
+testing = [{ name = "pytest", specifier = ">=9.0.2" }]
+typing = [{ name = "mypy", specifier = ">=1.19.1" }]
 
 [[package]]
 name = "tenacity"
