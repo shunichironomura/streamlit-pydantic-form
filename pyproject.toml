@@ -24,7 +24,7 @@ Repository = "https://github.com/shunichironomura/streamlit-pydantic-form"
 
 [dependency-groups]
 dev = [
-  "pre-commit==4.5.0",
+  "pre-commit==4.5.1",
   { include-group = "ruff" },
   { include-group = "testing" },
   { include-group = "typing" },
