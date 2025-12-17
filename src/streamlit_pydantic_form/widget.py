@@ -56,7 +56,7 @@ class Checkbox(WidgetBuilder[bool]):
         kwargs: dict[str, Any] | None = None,
     ) -> bool:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -78,7 +78,7 @@ class Toggle(WidgetBuilder[bool]):
         kwargs: dict[str, Any] | None = None,
     ) -> bool:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -144,7 +144,7 @@ class Multiselect(WidgetBuilder[list[Any]]):
         kwargs: dict[str, Any] | None = None,
     ) -> list[Any]:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"default": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -210,7 +210,7 @@ class TextInput(WidgetBuilder[str | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> str | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -254,7 +254,7 @@ class TextArea(WidgetBuilder[str | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> str | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
@@ -358,7 +358,7 @@ class ColorPicker(WidgetBuilder[str]):
         kwargs: dict[str, Any] | None = None,
     ) -> str:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default
+        value = value if value is not None else self.default  # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
