@@ -16,7 +16,6 @@ env:
 
 jobs:
   ruff:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -37,7 +36,6 @@ jobs:
         run: uv run -- ruff check
 
   mypy:
-    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -56,3 +54,30 @@ jobs:
 
       - name: Run mypy
         run: uv run -- mypy .
+
+  ty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install the project
+        run: uv sync --no-dev --group typing
+
+      - name: Run ty
+        run: uv run -- ty check
+
+  collect:
+    needs: [ruff, mypy, ty]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect results
+        run: echo "All checks passed!"
