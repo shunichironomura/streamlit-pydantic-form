@@ -32,16 +32,12 @@ dev = [
 ruff = ["ruff>=0.14.9"]
 testing = ["pytest>=9.0.2"]
 typing = [
-  "mypy>=1.19.1",
   "ty>=0.0.2",
 ]
 
 [build-system]
 requires = ["uv_build>=0.10.0,<0.11.0"]
 build-backend = "uv_build"
-
-[tool.mypy]
-strict = true
 
 [tool.ruff]
 line-length = 120

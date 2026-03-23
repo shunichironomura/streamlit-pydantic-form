@@ -35,26 +35,6 @@ jobs:
       - name: Run ruff
         run: uv run -- ruff check
 
-  mypy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: ${{ env.UV_VERSION }}
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version-file: ".python-version"
-
-      - name: Install the project
-        run: uv sync --no-dev --group typing
-
-      - name: Run mypy
-        run: uv run -- mypy .
-
   ty:
     runs-on: ubuntu-latest
     steps:
@@ -76,7 +56,7 @@ jobs:
         run: uv run -- ty check
 
   collect:
-    needs: [ruff, mypy, ty]
+    needs: [ruff, ty]
     runs-on: ubuntu-latest
     steps:
       - name: Collect results
