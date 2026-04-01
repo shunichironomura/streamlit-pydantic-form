@@ -214,7 +214,7 @@ class TextInput(WidgetBuilder[str | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.text_input(*self._args, **kwargs) if form is None else form.text_input(*self._args, **kwargs)  # type: ignore[no-any-return]
+        return st.text_input(*self._args, **kwargs) if form is None else form.text_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
 
 
 class NumberInput(WidgetBuilder[int | float | None]):
@@ -232,11 +232,11 @@ class NumberInput(WidgetBuilder[int | float | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> int | float | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.number_input(*self._args, **kwargs) if form is None else form.number_input(*self._args, **kwargs)  # type: ignore[no-any-return]
+        return st.number_input(*self._args, **kwargs) if form is None else form.number_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
 
 
 class TextArea(WidgetBuilder[str | None]):
@@ -258,7 +258,7 @@ class TextArea(WidgetBuilder[str | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.text_area(*self._args, **kwargs) if form is None else form.text_area(*self._args, **kwargs)  # type: ignore[no-any-return]
+        return st.text_area(*self._args, **kwargs) if form is None else form.text_area(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
 
 
 class DateInput(WidgetBuilder[DateWidgetReturn]):
@@ -276,11 +276,11 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         kwargs: dict[str, Any] | None = None,
     ) -> DateWidgetReturn:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)  # type: ignore[no-any-return]
+        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
 
 
 class TimeInput(WidgetBuilder[time | None]):
@@ -298,11 +298,11 @@ class TimeInput(WidgetBuilder[time | None]):
         kwargs: dict[str, Any] | None = None,
     ) -> time | None:
         kwargs = self._kwargs | kwargs if kwargs is not None else self._kwargs
-        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this
+        value = value if value is not None else self.default  # type: ignore[assignment] # TODO: Fix this # ty: ignore[invalid-assignment]
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.time_input(*self._args, **kwargs) if form is None else form.time_input(*self._args, **kwargs)  # type: ignore[no-any-return]
+        return st.time_input(*self._args, **kwargs) if form is None else form.time_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
 
 
 class FileUploader(WidgetBuilder[Any]):
