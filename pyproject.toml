@@ -71,3 +71,6 @@ ignore = [
 "pages/*.py" = [
   "INP001",  # implicit-namespace-package
 ]
+
+[tool.uv]
+exclude-newer = "7 days"
