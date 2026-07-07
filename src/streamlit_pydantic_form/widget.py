@@ -60,7 +60,7 @@ class Checkbox(WidgetBuilder[bool]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.checkbox(*self._args, **kwargs) if form is None else form.checkbox(*self._args, **kwargs)  # ty: ignore[invalid-argument-type]
+        return st.checkbox(*self._args, **kwargs) if form is None else form.checkbox(*self._args, **kwargs)
 
 
 class Toggle(WidgetBuilder[bool]):
@@ -82,7 +82,7 @@ class Toggle(WidgetBuilder[bool]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.toggle(*self._args, **kwargs) if form is None else form.toggle(*self._args, **kwargs)  # ty: ignore[invalid-argument-type]
+        return st.toggle(*self._args, **kwargs) if form is None else form.toggle(*self._args, **kwargs)
 
 
 class Radio(WidgetBuilder[Any | None]):
@@ -104,7 +104,7 @@ class Radio(WidgetBuilder[Any | None]):
         kwargs = kwargs | {"index": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.radio(*self._args, **kwargs) if form is None else form.radio(*self._args, **kwargs)  # ty: ignore[no-matching-overload]
+        return st.radio(*self._args, **kwargs) if form is None else form.radio(*self._args, **kwargs)
 
 
 class Selectbox(WidgetBuilder[Any | None]):
@@ -126,7 +126,7 @@ class Selectbox(WidgetBuilder[Any | None]):
         kwargs = kwargs | {"index": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.selectbox(*self._args, **kwargs) if form is None else form.selectbox(*self._args, **kwargs)  # ty: ignore[no-matching-overload]
+        return st.selectbox(*self._args, **kwargs) if form is None else form.selectbox(*self._args, **kwargs)
 
 
 class Multiselect(WidgetBuilder[list[Any]]):
@@ -148,7 +148,7 @@ class Multiselect(WidgetBuilder[list[Any]]):
         kwargs = kwargs | {"default": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.multiselect(*self._args, **kwargs) if form is None else form.multiselect(*self._args, **kwargs)  # ty: ignore[no-matching-overload]
+        return st.multiselect(*self._args, **kwargs) if form is None else form.multiselect(*self._args, **kwargs)
 
 
 class Slider(WidgetBuilder[Any]):
@@ -170,7 +170,7 @@ class Slider(WidgetBuilder[Any]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.slider(*self._args, **kwargs) if form is None else form.slider(*self._args, **kwargs)  # ty: ignore[no-matching-overload]
+        return st.slider(*self._args, **kwargs) if form is None else form.slider(*self._args, **kwargs)
 
 
 class SelectSlider(WidgetBuilder[Any | tuple[Any]]):
@@ -192,7 +192,7 @@ class SelectSlider(WidgetBuilder[Any | tuple[Any]]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.select_slider(*self._args, **kwargs) if form is None else form.select_slider(*self._args, **kwargs)  # ty: ignore[no-matching-overload]
+        return st.select_slider(*self._args, **kwargs) if form is None else form.select_slider(*self._args, **kwargs)
 
 
 class TextInput(WidgetBuilder[str | None]):
@@ -214,7 +214,7 @@ class TextInput(WidgetBuilder[str | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.text_input(*self._args, **kwargs) if form is None else form.text_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
+        return st.text_input(*self._args, **kwargs) if form is None else form.text_input(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class NumberInput(WidgetBuilder[int | float | None]):
@@ -236,7 +236,7 @@ class NumberInput(WidgetBuilder[int | float | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.number_input(*self._args, **kwargs) if form is None else form.number_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
+        return st.number_input(*self._args, **kwargs) if form is None else form.number_input(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class TextArea(WidgetBuilder[str | None]):
@@ -258,7 +258,7 @@ class TextArea(WidgetBuilder[str | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.text_area(*self._args, **kwargs) if form is None else form.text_area(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
+        return st.text_area(*self._args, **kwargs) if form is None else form.text_area(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class DateInput(WidgetBuilder[DateWidgetReturn]):
@@ -280,7 +280,7 @@ class DateInput(WidgetBuilder[DateWidgetReturn]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
+        return st.date_input(*self._args, **kwargs) if form is None else form.date_input(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class TimeInput(WidgetBuilder[time | None]):
@@ -302,7 +302,7 @@ class TimeInput(WidgetBuilder[time | None]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.time_input(*self._args, **kwargs) if form is None else form.time_input(*self._args, **kwargs)  # type: ignore[no-any-return] # ty: ignore[no-matching-overload]
+        return st.time_input(*self._args, **kwargs) if form is None else form.time_input(*self._args, **kwargs)  # type: ignore[no-any-return]
 
 
 class FileUploader(WidgetBuilder[Any]):
@@ -362,4 +362,4 @@ class ColorPicker(WidgetBuilder[str]):
         kwargs = kwargs | {"value": value}
         if randomize_key:
             kwargs["key"] = _generate_random_key()
-        return st.color_picker(*self._args, **kwargs) if form is None else form.color_picker(*self._args, **kwargs)  # ty: ignore[invalid-argument-type]
+        return st.color_picker(*self._args, **kwargs) if form is None else form.color_picker(*self._args, **kwargs)
