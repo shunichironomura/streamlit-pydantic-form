@@ -64,6 +64,7 @@ ignore = [
   "TD003",  # add link on issue into TODO
   "FIX002",  # Line contains TODO
   "ERA001",  # commented-out-code
+  "CPY001",  # missing copyright notice
   "PLR0913",  # Too many arguments in function definition
 ]
 
