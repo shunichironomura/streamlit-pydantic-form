@@ -36,6 +36,7 @@ from pydantic import BaseModel
 
 from streamlit_pydantic_form import st_auto_form, widget
 
+
 class SimpleFormModel(BaseModel):
     slider_val: Annotated[int, widget.Slider("Form slider")]
     checkbox_val: Annotated[bool, widget.Checkbox("Form checkbox")]
@@ -60,13 +61,16 @@ from pydantic import BaseModel
 
 from streamlit_pydantic_form import st_auto_form, widget
 
+
 class ChildFormModel(BaseModel):
     slider_val: Annotated[int, widget.Slider("Child slider")]
+
 
 class ParentFormModel(BaseModel):
     slider_val: Annotated[int, widget.Slider("Parent slider")]
     checkbox_val: Annotated[bool, widget.Checkbox("Parent checkbox")]
     child: ChildFormModel
+
 
 with st_auto_form("form_2", model=ParentFormModel) as parent_form:
     val2 = parent_form.input_widgets()
@@ -94,12 +98,14 @@ from pydantic import BaseModel
 
 from streamlit_pydantic_form import st_auto_form, widget
 
+
 # Custom widget builder
 class PointWidget(widget.WidgetBuilder):
     def build(self) -> PointModel:
         x = st.slider("X")
         y = st.slider("Y")
         return PointModel(x=x, y=y)
+
 
 with st_auto_form("form_3", model=PointModel, widget_builder=PointWidget()) as point_form:
     val3 = point_form.input_widgets()
@@ -118,10 +124,12 @@ from pydantic import BaseModel
 
 from streamlit_pydantic_form import st_auto_form, widget
 
+
 # External model
 class PointModel(BaseModel):
     x: int
     y: int
+
 
 # Custom widget
 class PointWidget(widget.WidgetBuilder):
@@ -130,9 +138,11 @@ class PointWidget(widget.WidgetBuilder):
         y = st.slider("Y")
         return PointModel(x=x, y=y)
 
+
 # Form model
 class PointFormModel(BaseModel):
     p: Annotated[PointModel, PointWidget()]
+
 
 with st_auto_form("form_4", model=PointFormModel) as point_form2:
     val4 = point_form2.input_widgets()
