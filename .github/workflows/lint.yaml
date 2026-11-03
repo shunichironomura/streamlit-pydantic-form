@@ -73,8 +73,11 @@ jobs:
         run: gh actions-lock --verify
 
   collect:
+    if: ${{ always() }}
     needs: [ruff, ty, actions-lock]
     runs-on: ubuntu-latest
     steps:
-      - name: Collect results
-        run: echo "All checks passed!"
+      - name: Require every job to succeed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: echo "$RESULTS" | jq -e 'all(.[]; .result == "success")'
