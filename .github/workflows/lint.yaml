@@ -55,6 +55,23 @@ jobs:
       - name: Run ty
         run: uv run -- ty check
 
+  prek:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: j178/prek-action@v3.1.0
+        with:
+          # Follow the prek version bundled with the action (updated by Renovate).
+          prek-version: latest-known
+          # no-commit-to-branch fails on pushes to main.
+          extra-args: --all-files --skip=no-commit-to-branch
+
   actions-lock:
     name: Verify actions lockfile
     permissions:
@@ -74,7 +91,7 @@ jobs:
 
   collect:
     if: ${{ always() }}
-    needs: [ruff, ty, actions-lock]
+    needs: [ruff, ty, prek, actions-lock]
     runs-on: ubuntu-latest
     steps:
       - name: Require every job to succeed
